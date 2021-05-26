@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Color Game</title>
+</head>
+<body>
+    <div id="flex-container">
+        <div id="UI_Row">
+            <div id="UI_level">Livello 1</div>
+            <div id="UI_stars">Stelle 3</div>
+        </div>
+        
+        <div id="user-letters">
+            <div class="letter" id="0"></div>
+            <div class="letter" id="1"></div>
+            <div class="letter" id="2"></div>
+            <div class="letter" id="3"></div>
+            <div class="letter" id="4"></div>
+            <div class="letter" id="5"></div>
+            <div class="letter" id="6"></div>
+            <div class="letter" id="7"></div>
+            <div class="letter" id="8"></div>
+            <div class="letter" id="9"></div>
+            <div class="letter" id="10"></div>
+            <div class="letter" id="11"></div>
+            <div id="color"></div>
+        </div>
+        <div id="letterSelected"></div>
+        <div id="hintSelected"></div>
+        
+        <div id="UI_Row">
+            
+            <button id="hardButton" onclick="hintManager()">Indizio</button>
+            <button id="hardButton" onclick="hintShuffle()">Scombina</button>
+            <button id="skipButton" onclick="resetSave()">Nuova partita</button>
+            <button id="hardButton" onclick="resetButton()">Reset Lettere</button>
+            <!--debug <button id="hardButton" onclick="skipLevel()">Skip</button>
+            <button class="myBtn">Open Modal</button>
+            <button class="myBtn">Open Modal 2</button>
+             -->
+        </div>
+    </div>
+    
+
+    <!-- The Modal with the welcome message-->
+    <div id="myModal2" class="modal">
+    
+      <!-- Modal content with the welcome message-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">×</span>
+          <h2>Benvenuto in Color Discovery!</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal_message"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btnClose">Ok</button>
+        </div>
+      </div>
+    
+    </div>
+    
+    
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+    
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">×</span>
+          <h2>Modal Header</h2>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the Modal Body</p>
+          <p>Some other text...</p>
+        </div>
+        <div class="modal-footer">
+          <h3>Modal Footer</h3>
+        </div>
+      </div>
+    
+    </div>
+    
+   
+    
+    
+
+    <script src="script.js"></script>
+</body>
+</html>
+

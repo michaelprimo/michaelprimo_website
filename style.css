@@ -1,0 +1,249 @@
+body
+{
+    margin: 0;
+    font-family: 'Sarala', sans-serif;
+    color: white;
+}
+
+#flex-container
+{
+    display: flex;
+    flex-direction: column;
+}
+
+#main_container
+{
+    width: 100%;
+    background: #000023;
+    transition: 1s;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    margin: 0;
+    place-content: center;
+    place-items: center;
+
+}
+
+.three_columns
+{
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+    width: 100%;
+}
+
+#title_text
+{
+    font-size: 6em;
+    color: white;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.slogan_text
+{
+    color: white;
+    animation-name: fly;
+    animation-duration: 10s;
+    transition: 1s;
+    width: 99%;
+    text-align: center;
+    font-size: 40px;
+    height: 40px;
+    margin: 10px 0;
+}
+
+#game_text
+{
+    color: white;
+    animation-name: fly;
+    animation-duration: 10s;
+    transition: 1s;
+    width: 99%;
+    text-align: center;
+    font-size: 60px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    word-wrap: break-word;
+}
+
+#scroll_elevator
+{
+    width: 50px;
+    height: 50px;
+    right: 1%;
+    position: fixed;
+}
+
+.about_me
+{
+    width: 100%;
+    font-size: 20px;
+    color: white;
+    margin: 0 5%;
+    background-color: #147FB8;
+    border-radius: 20%;
+}
+
+.about_title
+{
+    font-size: 40px;
+    text-align: center;
+}
+
+.about_image
+{
+    width: 250px;
+    height: 250px;
+    border: 5px solid white;
+    border-radius: 100%;
+    margin-top: 10px;
+}
+
+.easy_center
+{
+    text-align: center;
+    border-radius: 10%;
+    width: 80%;
+    margin: 0 10%;
+    background-color: #147FB8;
+    margin-bottom: 10px;
+}
+
+.game_container
+{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#phase_2
+{
+    display: flex;
+    flex-direction: row;
+    margin: 0 10%;
+    text-align: center;
+}
+
+#phase_3
+{
+    width: 100%;
+    display: flex;
+    place-items: center;
+    place-content: center;
+}
+
+.game_description
+{
+    margin: 5% 10%;
+}
+
+.text_description
+{
+    margin: 0 10%;
+}
+
+.slogan_description
+{
+    font-size: 25px;
+}
+
+.game_title
+{
+    color: #000025;
+    font-size: 35px;
+    margin: 0 10%;
+    text-align: center;
+}
+
+.contact_image
+{
+    width: 80px;
+    height: 80px;
+    border: 3px solid white;
+    border-radius: 100%;
+}
+
+.bg_inherit
+{
+    background-color: inherit !important;
+}
+
+.slogan_word
+{
+    color: #147FB8;
+}
+
+.button_link
+{
+    width: 70px;
+    height: 70px;
+    margin-top: 15px;
+    background-color: #000025;
+    color: white;
+    font-size: 30px;
+    border-radius: 25%;
+}
+
+.twist:hover
+{
+    animation-name: twist;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    display:inline-block;
+    transition: 1s;
+}
+
+@keyframes twist
+{
+    0%
+    {
+        transform: rotateY(0deg);
+    }
+    50%
+    {
+        transform: rotateY(180deg);
+    }
+    100%
+    {
+        transform: rotateY(360deg);
+    }
+}
+
+@media (max-width: 780px) 
+{
+    #phase_2
+    {
+        flex-direction: column;
+        place-items: center;
+    }    
+
+    .three_columns
+    {
+        grid-template-rows: 33% 34% 33%;
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+    }
+    #title_text
+    {
+        font-size: 3.5em;
+    }
+    .slogan_text
+    {
+        font-size: 1.8em;
+    }
+
+    .about_image
+    {
+        width: 150px;
+        height: 150px;
+    }
+
+    #game_text
+    {
+        font-size: 30px;
+        width: 80%;
+        text-align: center;
+    }
+}

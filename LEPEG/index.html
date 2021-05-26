@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miniguida per Ambra</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <p class="center big_text">Miniguida per Ambra</p>
+    <div class="center">
+        <h1>Come funziona il programma aggiuntivo</h1>
+        <p> Il programma genera un URL (link) per il bottone in base al prodotto in cui si è. Se c'è la frase "Disponibile per il Noleggio!" nella descrizione del prodotto (editabile in Gestione Prodotti), allora apparirà il bottone.</p>
+        <p> La cosa che dobbiamo fare noi adesso è generare l'URL, metterlo nella pagina nuova o quella nella quale abbiamo bisogno di collegare, così completiamo il processo.</p>
+        <h1>Come viene generato l'URL</h1>
+        <p>Il link per prodotto viene generato secondo certi criteri:</p>
+        <ul>
+            <li>I caratteri speciali vengono rimossi;</li>
+            <li>Gli spazi tra le parole vengono rimossi;</li>
+            <li>Se ci sono più di 35 caratteri del nome, i restanti vengono rimossi;</li>
+            <li>Tutto il nome viene reso in minuscolo.</li>
+        </ul>
+        <p>Esempio: "Vestito lungo rosso maxmara tg it 38" diventa "vestitolungorossomaxmaratgit38".</p>
+        <h1>Creare una pagina nuova per un prodotto</h1>
+        <p>Prima di procedere nel prendere l'URL e metterlo nella pagina, dobbiamo prima creare la pagina in un modo ordinato.</p>
+        <p>Queste sono le pagine adesso:</p>
+        <figure>
+            <img src="lista_pagine.PNG" alt="">
+            <figcaption>Parte della lista di tutte le pagine.</figcaption>
+        </figure>
+        
+        <p>Per fare un lavoro ordinato dobbiamo creare una pagina e metterla sotto Calendario dei Noleggi.</p>
+        <p>Andiamo nel menù del sito e creiamo una pagina nuova:</p>
+        <figure>
+            <img src="aggiungi_pagina.PNG" alt="">
+            <figcaption>Lista di pagine viste dalla voce "Menù e Pagine".</figcaption>
+        </figure>
+        <p>Adesso devi dare il nome della pagina a tuo piacimento, però è consigliato dare il nome del tuo prodotto (se ha più di 35 caratteri, devi abbreviare).</p>
+        <figure>
+            <img src="crea_nuova_pagina.PNG" alt="">
+            <figcaption>La pagina nuova è stata creata e le abbiamo dato un nome.</figcaption>
+        </figure>
+        <p>Dopo, trascina la pagina sotto Calendario dei Noleggi, così diventerà parte di essa.</p>
+        <figure>
+            <img src="pagina_spostata.PNG" alt="">
+            <figcaption>La nuova pagina è stata spostata in Calendario dei Noleggi.</figcaption>
+        </figure>
+        <p>Clicca nel tastino a destra del nome della pagina e vai su Impostazioni. Dovresti vedere questa schermata:</p>
+        <figure>
+            <img src="impostazioni_pagina.PNG" alt="">
+            <figcaption>Questo sarà molto importante tra poco finito di sistemare la pagina.</figcaption>
+        </figure>
+        <p>Per adesso andiamo via dal menù e modifichiamo la pagina.</p>
+        <h1>Pagina attuale: Pagina Creata</h1>
+        <p>Inserisci un testo per il titolo (nome del prodotto), eventualmente un link per ritornare nella pagina del prodotto e tutto ciò che desideri.</p>
+        <p>Poi, mettiamo il nostro calendario.</p>
+        <p>Per metterlo, comincia ad andare nelle mie app e gestisci app fino a quando non vedi "Events Calendar".</p>
+        <figure>
+            <img src="le_mie_app.PNG" alt="">
+            <figcaption>Questo tasto che ho indicato in giallo ti porterà nelle "mie app".</figcaption>
+        </figure>
+        <figure>
+            <img src="gestisci_app.PNG" alt="">
+            <figcaption>Clicca qui per vedere le app installate nel sito.</figcaption>
+        </figure>
+        <figure>
+            <img src="events_calendar_aggiungi.PNG" alt="">
+            <figcaption>Vai giù nella pagina fino a quando non vedi l'app, clicca a destra il tasto e poi su "Aggiungi".</figcaption>
+        </figure>
+        <figure>
+            <img src="calendario_nella_pagina.PNG" alt="">
+            <figcaption>Il risultato finale della pagina creata.</figcaption>
+        </figure>
+        <p>Modifica il calendario a tuo piacimento come sai e poi ritorna nella pagina prodotto.</p>
+        <h1>Pagina attuale: Pagina Prodotto</h1>
+        <p>Adesso dobbiamo fare la cosa più importante: ricavare il link generato dal programma. Puoi fare in due modi:</p>
+        <ul>
+            <li>Seguire le indicazioni nella lista che avevo fatto sopra (con l'esempio "Vestito lungo rosso maxmara tg it 38" che diventa "vestitolungorossomaxmaratgit38");</li>
+            <li>Andare in fondo a questa guida;</li>
+            <li>Seguire le indicazioni sotto.</li>
+        </ul>
+        <p>Hai presente il codice che appare sotto la schermata? Ci sono dei messaggi per te:</p>
+        <figure>
+            <img src="messaggio_in_codice.PNG" alt="">
+            <figcaption>Un vero e autentico "Messaggio in codice".</figcaption>
+        </figure>
+        <p>Quindi, vai nella pagina che ti interessa mentre sei in anteprima e, se togli le due stanghette su quella stringa, vedi il link generato per la pagina.</p>
+        <p>Questo vale fino a quando non rimetti le stanghette a posto nel codice.</p>
+        <p>In anteprima vai nel prodotto che ti interessa e dovresti trovare questo:</p>
+        <figure>
+            <img src="link_generato.PNG" alt="">
+            <figcaption>Ecco la parola generata nel footer.</figcaption>
+        </figure>
+        <p>Adesso copiala che la useremo come URL tra pochissimo.</p>
+        <p>Vai su "Menù e Pagine", poi su Impostazioni della pagina che vuoi modificare e vai qui:</p>
+        <figure>
+            <img src="impostazioni_link.PNG" alt="">
+            <figcaption>Ecco il link da modificare.</figcaption>
+        </figure>
+        <p>Rimuovi quel link e inserisci la parola che era stata generata prima, in questo caso vestitolungogiallosportmaxtgitm .</p>
+        <p>I link non funzioneranno in anteprima, devi fare una versione di prova o pubblicare il sito per vedere i risultati. </p>
+        <p>Per adesso se hai problemi a generare i link inserisci qui i nomi dei siti e li genererà in automatico, così puoi prendere da qui</p>
+        <p>le stringhe che ti servono da mettere poi come URL:</p>
+        <input type="text" name="" id="word" placeholder="Nome del prodotto">
+        <button onclick="genera();">Genera!</button>
+        <span id="URL">Parola generata dal programma quando verrà inserito il nome di un prodotto.</span>
+        <a href="https://www.lepegcouturelab.com/genera-url">Oppure puoi andare qui che ti ho realizzato la pagina apposta.</a>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+body
+{
+    background-color: #D3ADB2;
+    margin-bottom: 400px;
+}
+
+.center
+{
+    text-align: center;
+}
+
+.big_text
+{
+    font-size: 50px;
+    /*margin-top: 0px;*/
+}
