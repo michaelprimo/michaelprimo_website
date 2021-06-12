@@ -221,7 +221,7 @@ body
 
     .three_columns
     {
-        grid-template-rows: 33% 34% 33%;
+        grid-template-rows: auto auto auto;
         grid-template-columns: 1fr;
         grid-gap: 10px;
     }
