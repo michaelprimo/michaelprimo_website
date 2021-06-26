@@ -105,6 +105,9 @@ function player()
     c.fillStyle = "green";
     c.font = '6vh san-serif';
     c.fillText(debug, pX-vh*5, pY);
+    c.fillStyle = "#fff";
+    c.font = '10vh san-serif';
+    c.fillText(p, pX-30, a.height/2);
 }
 
 function star()
@@ -124,9 +127,8 @@ function enemy()
     c.font = '10vh san-serif';
     c.fillText("🌕", eX-vh*10, eY);
     eX += speedX;
-    if(eX >= a.width+pR || eX <= -pR)
+    if(eX >= a.width+vh*9 || eX <= -vh*9)
     {
-      eX = -pR*2;
       p++;
       random();
     }
@@ -148,37 +150,34 @@ function random()
 {
   d = Math.floor(Math.random() * 4);
   console.log(speedX);
+  //da fare speedX math abs
   if(d==0)
   {
     eY = a.height/10*6;
-    eX = -vh*10;
+    eX = -vh*6;
     speedX = Math.abs(speedX)+f;
   }
   if(d==1)
   {
     eY = a.height/10*6;
-    eX = a.width+vh*10;
+    eX = a.width+vh*4;
     speedX = -speedX-f;
   }
   if(d==2)
   {
     eY = a.height/10*4;
-    eX = -vh*10;
+    eX = -vh*6;
     speedX = Math.abs(speedX)+f;
   }
   if(d==3)
   {
     eY = a.height/10*4;
-    eX = a.width+vh*10;
+    eX = a.width+vh*4;
     speedX = -speedX-f;
   }
 }
 
 a.addEventListener('click', function() {
-  console.log("eY = " + eY + " pY = " + pY);
-  console.log("pY - eY = " + (pY - eY));  
-  console.log("speedX " + speedX + "speedY " + speedY + " p " + p);
-  
   if(pB==1)
   {
     pY = a.height/10*6;
@@ -188,22 +187,6 @@ a.addEventListener('click', function() {
   {
     pY = a.height/10*4;
     pB=1;
-  }
-
-  if(pY - eY <= pR && pY - eY >= -pR)
-  {
-    //debug = "yes";
-    d=-d;
-    rB=1;
-    p++;
-    speedX++;
-    speedY++;
-    console.log("oh no");
-  }
-  else
-  {
-    //g=0;
-    //debug = "no";
   }
 }, false);
 // =======================
