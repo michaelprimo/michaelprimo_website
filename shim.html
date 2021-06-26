@@ -71,10 +71,13 @@ console.log(
 <script type=text id=entry>
 // Your entry goes here 👇
 // =======================
-let pX = a.width/2;
-let pY = a.height/2;
-let eX = a.width/2;
-let eY = 100;
+let pX = a.width/2-60;
+let pY = a.height/10*4;
+let f = a.width/400;
+console.log(f);
+let pB = 1;
+let eX = -30;
+let eY = a.height/10*4;
 let eR = 50;
 let pR = 100;
 let p = 1;
@@ -83,57 +86,58 @@ let speedY = a.height/100;
 let d = 1;
 let rB = 1;
 let g = 1;
-let debug = "wait";
+let debug = "🙭";
+let rX = [];
+  let rY = [];
+  for(let i = 0; i<50; i++)
+  {
+    rX[i] = Math.random() * a.width;
+    rY[i] = Math.random() * a.height;
+  }
 loop();
 
 function player()
 {
+    c.fillStyle = "#1a004c";
+    c.fillRect(0, 0, a.width, a.height);
     
-    c.beginPath();
-    c.arc(pX, pY, pR, 0, 2 * Math.PI);
-    c.fillStyle = "#fff";
-    c.stroke();
-    c.fill();
     c.fillStyle = "green";
-    c.font = '60px san-serif';
-    c.fillText(debug, pX-20, pY-20);
+    c.font = '15vh san-serif';
+    c.fillText(debug, pX, pY);
 }
 
-function text()
+function star()
 {
+  for(let i = 0; i<30; i++)
+  {
+    c.fillStyle = "yellow";
+    c.font = '12px san-serif';
+    c.fillText("🌟", rX[i], rY[i]);
+  }
   
 }
 
 function enemy()
 {
-    c.beginPath();
-    c.arc(eX, eY, eR, 0, 2 * Math.PI);
     c.fillStyle = "red";
-    c.stroke();
-    c.fill();
-    if(d==1)
-    {
-      eY += speedY;
-    }
-    else
-    {
-      eX += speedX;
-    }
-    if(eY >= a.height+pR || eY <= -pR)
-    {
-      eY = -pR;
-    }
+    c.font = '10vh san-serif';
+    c.fillText("🌕", eX, eY);
+    eX += speedX;
     if(eX >= a.width+pR || eX <= -pR)
     {
-      eX = -pR;
+      eX = -pR*2;
+      p++;
+      random();
     }
+    
 }
 
 function loop()
 {
   c.clearRect(0, 0, a.width, a.height);
-  random();
+  //random();
   player();
+  star();
   enemy();
   if(g==1){setTimeout(loop, 33);}
   
@@ -141,18 +145,31 @@ function loop()
 
 function random()
 {
-  console.log("px: " + pX + " py: " + pY);
-  if(rB==1&&d==1)
-  { 
-    pX = eX;
-    pY = Math.random() * (a.height-pR)+pR;
-    rB=0;
-  }
-  if(rB==1&&d==-1)
+  d = Math.floor(Math.random() * 4);
+  console.log(speedX);
+  if(d==0)
   {
-    pY = eY;
-    pX = Math.random() * (a.width-pR)+pR;
-    rB=0;
+    eY = a.height/10*6;
+    eX = -60;
+    speedX = Math.abs(speedX)+f;
+  }
+  if(d==1)
+  {
+    eY = a.height/10*6;
+    eX = a.width+60;
+    speedX = -speedX-f;
+  }
+  if(d==2)
+  {
+    eY = a.height/10*4;
+    eX = -60;
+    speedX = Math.abs(speedX)+f;
+  }
+  if(d==3)
+  {
+    eY = a.height/10*4;
+    eX = a.width+60;
+    speedX = -speedX-f;
   }
 }
 
@@ -161,9 +178,20 @@ a.addEventListener('click', function() {
   console.log("pY - eY = " + (pY - eY));  
   console.log("speedX " + speedX + "speedY " + speedY + " p " + p);
   
+  if(pB==1)
+  {
+    pY = a.height/10*6;
+    pB=0;
+  }
+  else
+  {
+    pY = a.height/10*4;
+    pB=1;
+  }
+
   if(pY - eY <= pR && pY - eY >= -pR)
   {
-    debug = "yes";
+    //debug = "yes";
     d=-d;
     rB=1;
     p++;
@@ -174,7 +202,7 @@ a.addEventListener('click', function() {
   else
   {
     //g=0;
-    debug = "no";
+    //debug = "no";
   }
 }, false);
 // =======================
