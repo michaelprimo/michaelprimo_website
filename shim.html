@@ -76,17 +76,13 @@ let pX = a.width/2;
 let pY = a.height/10*4;
 let f = a.width/400;
 console.log(f);
-let pB = 1;
+let pB=p=d=rB=g=1;
 let eX = -30;
 let eY = a.height/10*4;
 let eR = 50;
 let pR = 100;
-let p = 1;
 let speedX = a.width/100;
 let speedY = a.height/100;
-let d = 1;
-let rB = 1;
-let g = 1;
 let debug = "👾";
 let rX = [];
   let rY = [];
@@ -102,20 +98,18 @@ function player()
     c.fillStyle = "#1a004c";
     c.fillRect(0, 0, a.width, a.height);
     
-    c.fillStyle = "green";
-    c.font = '6vh san-serif';
-    c.fillText(debug, pX-vh*5, pY);
+    c.font = '6vh';
+    c.fillText(debug, pX-vh*7, pY);
     c.fillStyle = "#fff";
-    c.font = '10vh san-serif';
-    c.fillText(p, pX-30, a.height/2);
+    c.font = '10vh';
+    c.fillText(p, pX-vh, a.height/2);
 }
 
 function star()
 {
   for(let i = 0; i<30; i++)
   {
-    c.fillStyle = "yellow";
-    c.font = '12px san-serif';
+    c.font = '12px serif';
     c.fillText("🌟", rX[i], rY[i]);
   }
   
@@ -125,14 +119,23 @@ function enemy()
 {
     c.fillStyle = "red";
     c.font = '10vh san-serif';
-    c.fillText("🌕", eX-vh*10, eY);
+    if(g==1)
+    {
+      c.fillText("🌕", eX-vh*10, eY);
+    }
     eX += speedX;
     if(eX >= a.width+vh*9 || eX <= -vh*9)
     {
       p++;
       random();
     }
-    
+    if(eX - pX <= 30 && eX - pX >= -30 && pY==eY)
+    {
+      debug="💥";
+      c.font = '6vh san-serif';
+      c.fillText(debug, pX-vh*5, pY);
+      g=0;
+    }
 }
 
 function loop()
@@ -150,30 +153,28 @@ function random()
 {
   d = Math.floor(Math.random() * 4);
   console.log(speedX);
-  //da fare speedX math abs
+  speedX = Math.abs(speedX)+f;
   if(d==0)
   {
     eY = a.height/10*6;
     eX = -vh*6;
-    speedX = Math.abs(speedX)+f;
   }
   if(d==1)
   {
     eY = a.height/10*6;
     eX = a.width+vh*4;
-    speedX = -speedX-f;
+    speedX = -speedX;
   }
   if(d==2)
   {
     eY = a.height/10*4;
     eX = -vh*6;
-    speedX = Math.abs(speedX)+f;
   }
   if(d==3)
   {
     eY = a.height/10*4;
     eX = a.width+vh*4;
-    speedX = -speedX-f;
+    speedX = -speedX;
   }
 }
 
@@ -182,11 +183,15 @@ a.addEventListener('click', function() {
   {
     pY = a.height/10*6;
     pB=0;
+    c.font = '6vh serif';
+    c.fillText(debug, pX-vh*5, pY);
   }
   else
   {
     pY = a.height/10*4;
     pB=1;
+    c.font = '6vh serif';
+    c.fillText(debug, pX-vh*5, pY);
   }
 }, false);
 // =======================
