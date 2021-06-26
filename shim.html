@@ -71,7 +71,8 @@ console.log(
 <script type=text id=entry>
 // Your entry goes here 👇
 // =======================
-let pX = a.width/2-30;
+let vh = a.height/100;
+let pX = a.width/2;
 let pY = a.height/10*4;
 let f = a.width/400;
 console.log(f);
@@ -103,7 +104,7 @@ function player()
     
     c.fillStyle = "green";
     c.font = '6vh san-serif';
-    c.fillText(debug, pX, pY);
+    c.fillText(debug, pX-vh*5, pY);
 }
 
 function star()
@@ -121,7 +122,7 @@ function enemy()
 {
     c.fillStyle = "red";
     c.font = '10vh san-serif';
-    c.fillText("🌕", eX, eY);
+    c.fillText("🌕", eX-vh*10, eY);
     eX += speedX;
     if(eX >= a.width+pR || eX <= -pR)
     {
@@ -150,25 +151,25 @@ function random()
   if(d==0)
   {
     eY = a.height/10*6;
-    eX = -60;
+    eX = -vh*10;
     speedX = Math.abs(speedX)+f;
   }
   if(d==1)
   {
     eY = a.height/10*6;
-    eX = a.width+60;
+    eX = a.width+vh*10;
     speedX = -speedX-f;
   }
   if(d==2)
   {
     eY = a.height/10*4;
-    eX = -60;
+    eX = -vh*10;
     speedX = Math.abs(speedX)+f;
   }
   if(d==3)
   {
     eY = a.height/10*4;
-    eX = a.width+60;
+    eX = a.width+vh*10;
     speedX = -speedX-f;
   }
 }
