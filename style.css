@@ -186,6 +186,11 @@ body
     border-radius: 25%;
 }
 
+.special_link
+{
+    font-size: 19px;
+}
+
 .twist:hover
 {
     animation-name: twist;
