@@ -1,0 +1,81 @@
+<!doctype html>
+<head>
+	<title>Title ~ js1024</title>
+	<meta name="author" content="Author"></meta>
+	<meta name="description" content="Short description"></meta>
+	<meta name="title" content="Title"></meta>
+	<meta charset=utf-8>
+</head>
+<body id=b>
+<canvas id=a></canvas>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+#a { position: relative; display: block;}
+.play { position: fixed; top: 50%; left: 50%; transform: translateX(-50%)translateY(-50%); font-size: 30px; font-family: arial, sans-serif; background: #f3f4f5; padding: 15px; border: 2px solid #ddd; border-radius: 5px; }
+</style>
+
+<script>
+
+// Entry configuration
+// ===================
+
+var title = "Title"; // this will be assigned automatically
+
+// Shim setup and polyfills (do not edit)
+// ======================================
+
+// canvas automatically adjusted !
+a.width = innerWidth;
+a.height = innerHeight;
+
+c = a.getContext("2d"); // no more $type conditional
+
+d = document;
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+a.requestPointerLock = a.requestPointerLock || a.mozRequestPointerLock || a.webkitRequestPointerLock;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+if (typeof OscillatorNode !== 'undefined' && OscillatorNode.prototype) {
+  OscillatorNode.prototype.start = OscillatorNode.prototype.start || OscillatorNode.prototype.noteOn;
+  OscillatorNode.prototype.stop = OscillatorNode.prototype.stop || OscillatorNode.prototype.noteOff;
+}
+
+// Add a start button if sound is present in the code
+onload = () => {
+  var entry_code = entry.innerText;
+  var has_sound = false;
+  if(entry_code.includes('eval')){
+    try {
+      eval(entry_code.replace(/eval\(/g, 'throw(').replace(/eval\`/g, 'throw`'));
+    }
+    catch(e){
+      entry_code = e;
+    }
+  }
+  if(entry_code.includes("AudioContext")||entry_code.includes("Oscillator")||entry_code.includes("speak")||entry_code.includes("play")||entry_code.includes("autoplay")){
+    b.insertAdjacentHTML("beforeEnd", "<button class='play' onclick='console.log(entry.innerText);eval(entry.innerText);this.remove()'>PLAY</button>");
+  }
+  else {
+    eval(entry.innerText);
+  }
+};
+console.log(
+  a, // canvas
+  b, // body
+  c, // 2D canvas context
+  d  // document
+);
+
+</script>
+
+<script type=text id=entry>
+// Your entry goes here 👇
+// =======================
+for(_='),FFo.`==_1_^*vZ"+Y&&XonWu==Math.c.fillText("te=wa.widthX(_d)=[],FR<d||q="++,*-vor(Style="#",x,yF9C=	[i]=n()*(functiW(){i=0;i<99;i++)c.fWt==h/9*vh seriflocalStorage.lfh=a.height,w=,v=h/99,x/2,y=k4,s=V/297,f=s/4,T=p=d=g=O=e=l=A=q=C=R=E=L=M=1,rtSI=["🥥"🌕"🥤"🧁"],nrandom,rw,th,Sf;setInrval(if(^g){f>1e=Fl>e=lF,104Rect(0,0,w,hFS+"r+=S/5*l,r>r=0F🌟r,t);"5c.xtAlign="cenr👾fffLV: Yl+"/Ye,x,5ZF🥥xYE+" 🥤xYL+" 🧁xYM,x,10ZF"9I[C],O,kFO+=s,(O>+7Z||O<=7)f+=f/100,R=99*n(9	38	27	06	1Fltriangle1,dflo4*n()Fs<0?s=-s+f:s+=f,(0_1k6F(2_3k4F(0_2O=6F1!=dX3!=(O+4Z,s=-s)FO-x<=6ZXO-x>=6Xy_ksquare0_CXE2_CLs/=2F3_CMl++F^Csawtooth💥E>0?E--:g=0F1,O=15F^um=new AudioCWxt,o=m.creaOscillat`type=q,o.cWnect(m.destinatiW`start(`stop(.1F0)}}F9Fa.addEventLisner("click^g✨^T?y6:y4,T=-T,sine1)}))';G=/[-W-Z^-`F]/.exec(_);)with(_.split(G))_=join(shift());eval(_)
+
+//THE END. THANKS FOR WATCHING! WE WILL SEE YOU IN THE NEXT EPISODE!
+//Github: https://github.com/michaelprimo
+// =======================
+</script>
+</body>
+
