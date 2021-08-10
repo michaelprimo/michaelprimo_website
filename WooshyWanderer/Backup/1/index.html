@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimum-scale=1, width=device-width, height=device-height">
+
+
+</head>
+<body>
+
+<canvas id="game" width="240" height="135"></canvas>
+<script>
+
+	let img = new Image();
+	img.src = "Image/Biplane.png";
+	img.onload = function()
+	{
+		init();
+	};
+
+	let animationIndex = 0;
+	function init()
+	{
+		window.requestAnimationFrame(step);
+	}
+
+	function step()
+	{
+		c.clearRect(0,0, a.width, a.heigth);
+		c.drawImage(img, 15*animationIndex, 0, 15, 15, 0, 0, 15, 15)
+		if(animationIndex>8)
+		{
+			animationIndex=0;
+		}
+		else
+		{
+			animationIndex++;
+		}
+		animationIndex++;
+	}
+
+	var a = document.getElementById("game");
+	var c = a.getContext("2d");
+	var map_position = 0;
+	var map = 
+	[
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+	];
+	var colors = ["#EAE1F0","#7E7185","#37313B","#1D1C1F","#89423F","#F63F4C","#FDBB27","#8D902E","#4159CB","#59A7AF"];
+	for(let i=0; i<9; i++)
+	{
+		for(let j=0; j<15; j++)
+		{
+			c.fillStyle = colors[map[map_position]];
+			c.fillRect(j*15,i*15,15,15);
+			map_position++;
+		}
+	}
+	
+</script>
+</body>
+</html>

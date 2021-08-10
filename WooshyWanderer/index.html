@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimum-scale=1, width=device-width, height=device-height">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+
+</head>
+<body>
+
+<canvas id="game" width="240" height="135"></canvas>
+<script>
+
+let canvas = document.querySelector('canvas');
+let ctx = canvas.getContext('2d');
+const FONT_NAME = 'Press Start 2P';
+let img2 = new Image();
+img2.src = 'Image/pandapopcorn.png';
+
+let img1 = new Image();
+img1.src = "Image/evilharu.png";
+
+let img = new Image();
+img.src = "Image/innocentwooshy.png";
+
+let img3 = new Image();
+img3.src = 'Image/heart.png';
+
+let audioType;
+let audio = new Audio();
+if (audio.canPlayType("audio/mp3")) {
+    audioType = ".mp3";
+} else {
+    audioType = ".wav";
+}
+
+
+let readySound = new Audio("sounds/ready" + audioType);
+let frogSound = new Audio("sounds/frog_appears" + audioType);
+let whitefrogSound = new Audio("sounds/whitefrog_appears" + audioType);
+let gameoverSound = new Audio("sounds/gameover" + audioType);
+let hurtSound = new Audio("sounds/biplane_hurt" + audioType);
+let fastbombSound = new Audio("sounds/fastbomb" + audioType);
+let slowbombSound = new Audio("sounds/slowbomb" + audioType);
+let normalTimeSound = new Audio("sounds/normalTime" + audioType);
+let frog_capturedSound = new Audio("sounds/frog_captured" + audioType);
+let extraSound = new Audio("sounds/extra" + audioType);
+let wave_shiftSound = new Audio("sounds/wave_shift" + audioType);
+let game_startedSound = new Audio("sounds/game_started" + audioType);
+let booted_gameSound = new Audio("sounds/booted_game" + audioType);
+let options_selectSound = new Audio("sounds/options_select" + audioType);
+booted_gameSound.play();
+
+// Our images array
+var images = [img1, img2];
+let angle = 45;
+let radians = angle * Math.PI / 180;
+
+let difficulty = 4;
+let difficultyText = ["EASY","NORMAL","HARD","VERY HARD","BIPLANE RIDER"];
+let waveCounter = 0;
+let waves = 0;
+let state = 0;
+let score = 0;
+let iFrame = 0;
+let iFrame_max = 15; 
+let lives = 3;
+let bombs = 3;
+let lives_difference = 0;
+let bombs_difference = 0;
+let wave_difference = 0;
+let livesForScore_available = 5;
+let scoreForLives = 10000;
+let cur_scoreForLives = scoreForLives;
+let centerText = ["READY!","PAUSE","GAME OVER"," ","WOOSHY WANDERER",
+"PRESS X,C,SPACE TO PLAY","X: NORMAL MODE/CLEAR FROGS","C: HARD MODE/SLOW TIME","UP: VERY HARD MODE/MOVE UP","DOWN: BIPLANE RIDER MODE","LEFT: SET LIVES/MOVE LEFT","RIGHT: SET BOMBS/MOVE RIGHT","SCORE","HI-SCORE"];
+let centerText_index = 0;
+
+let gotHit = false;
+let gameStarted = false;
+let can_slowTime = true;
+let can_fasterTime = true;
+let is_slowTime = false;
+
+const scale = 1;
+const width = 15;
+const height = 15;
+const scaledWidth = scale * width;
+const scaledHeight = scale * height;
+let playerY = canvas.height/2;
+let playerX = canvas.width/2;
+// Keys states (false: key is released / true: key is pressed)
+up = right = down = left = false;
+let speed = 0;
+let pause = false;
+// spawn a new object every 1500ms
+var minSpawnRate = 2000;
+//var maxSpawnRate = 300;
+var reduceSpawnRate = 30;
+var spawnRate = Math.round(Math.random() * minSpawnRate);
+
+// when was the last object spawned
+var lastSpawn = Date.now() + 3000;
+
+// this array holds all spawned object
+var objects = [];
+
+// save the starting time (used to calc elapsed time)
+var startTime = Date.now();
+
+var directionSpawn = ["down", "up", "right", "left"];
+
+let currentLoopIndex = 0;
+let frameCount = 0;
+
+let frameEnemyCount = 0;
+
+let animationFrames = [0];
+let selectType;
+// start animating
+
+setInterval(getScore, 100);
+
+function setBombs()
+{
+  options_selectSound.play();
+  if(bombs < 5)
+  {
+    bombs++;
+  }
+  else
+  {
+    bombs = 1;
+  }
+}
+
+function setLives()
+{
+  options_selectSound.play();
+  if(lives < 5)
+  {
+    lives++;
+  }
+  else
+  {
+    lives = 1;
+  }
+}
+
+function getScore()
+{
+  if(lives > 0 && gameStarted == true && pause == false)
+  {
+    score += (6+waves+(lives_difference*2)+(bombs_difference*2)+wave_difference+bombs);
+  }
+  if(score >= cur_scoreForLives)
+  {
+    if(livesForScore_available > 0)
+    {
+      lives++;
+    }
+    else
+    {
+      bombs++;
+    }
+    livesForScore_available--;
+    cur_scoreForLives += scoreForLives;
+    extraSound.play();
+  }
+  
+  if(iFrame > 0 && pause == false)
+    {
+      iFrame--;
+      gotHit = true;  
+    }
+    else
+    {
+      gotHit = false; 
+    }
+    if(pause == false && state == 1)
+    {
+      waveCounter++;
+      if(waveCounter >= 100)
+      {
+      waves++;
+      wave_shiftSound.play();
+      waveCounter = 0;
+      }
+    }
+    
+    
+}
+
+window.onload=function(){
+  
+    requestAnimationFrame(menuState);
+}
+
+img.onload = function() {
+  if(state == 1)
+  {
+    init();
+  }
+  else
+  {
+    menuState();
+  }
+};
+/*
+function setDifficulty()
+{
+  minSpawnRate = 1500;
+  maxSpawnRate = 500;
+  reduceSpawnRate = 10;
+  for(let i = 0; i<=difficulty; i++)
+  {
+    minSpawnRate -= 100*i;
+    maxSpawnRate -= 100;
+    reduceSpawnRate += 10;
+  }
+}
+*/
+function setMode(direction)
+{
+  if(direction == "up")
+  {
+    waves++;
+    if(waves>40)
+    {
+      waves = 0;
+    }
+  }
+  else
+  {
+    waves--;
+    if(waves < 0)
+    {
+      waves = 40;
+    }
+  }
+  wave_shiftSound.play();
+}
+
+function menuState() 
+{ 
+  if(state == 0)
+  {
+    ctx.fillStyle = "#1D1C1F";
+    ctx.fillRect(0,0,canvas.width,canvas.height);  
+    ctx.fillStyle = "#fff";
+    ctx.font = `8px "${FONT_NAME}"`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.drawImage(img3,
+                0, 0, width, height,
+                Math.round(canvas.width/13), 7, width, height);
+    ctx.fillText(" x " + lives, Math.round(canvas.width/5), 15);
+    ctx.fillText(centerText[12], Math.round(canvas.width/3)+15, 10);
+    ctx.fillText(score, Math.round(canvas.width/3)+15, 20);
+    ctx.fillText("WAVE", Math.round(canvas.width/2)+20, 10);
+    ctx.fillText(waves, Math.round(canvas.width/2)+20, 20);
+    ctx.drawImage(img2,
+                0, 0, width, height,
+                Math.round(canvas.width/2+canvas.width/5), 7, width, height);
+    ctx.fillText(" x " + bombs, Math.round(canvas.width/2+canvas.width/3), 15);
+    if(lives <= 0)
+    {
+      centerText_index = 2;
+      pause = true;
+      gameStarted = false;
+     
+    }
+    ctx.fillText(centerText[4], Math.round(canvas.width/2), Math.round(canvas.height/4+3));
+   
+    ctx.fillText(centerText[5], Math.round(canvas.width/2), Math.round(canvas.height/10*8-10));
+    ctx.fillText("LEFT: SET LIVES", Math.round(canvas.width/2), Math.round(canvas.height/10*5-10));
+    ctx.fillText("RIGHT: SET BOMBS", Math.round(canvas.width/2), Math.round(canvas.height/10*6-10));
+    ctx.fillText("UP/DOWN: SET WAVES", Math.round(canvas.width/2), Math.round(canvas.height/10*7-10));
+    
+  }
+  
+    
+
+}
+
+
+function gameState()
+{
+  if(state == 1)
+  {
+    animate();
+  }
+  
+}
+
+function init() {
+  if(state == 1)
+  {
+    window.requestAnimationFrame(step);
+  }
+ 
+}
+
+
+function step() {
+	movePlayer();
+  frameCount++;
+  if (frameCount < 2) {
+    window.requestAnimationFrame(step);
+    return;
+  }
+  frameCount = 0;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = "#1D1C1F";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+	
+
+
+  drawFrame(animationFrames[currentLoopIndex], Math.round(playerX),  Math.round(playerY));
+  currentLoopIndex++;
+  if (currentLoopIndex >= animationFrames.length) 
+  {
+    currentLoopIndex = 0;
+  }
+  window.requestAnimationFrame(step);
+}
+
+function renderText() 
+{ 
+    ctx.fillStyle = "#fff";
+    ctx.font = `8px "${FONT_NAME}"`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.drawImage(img3,
+                0, 0, width, height,
+                Math.round(canvas.width/13), 7, width, height);
+    ctx.fillText(" x " + lives, Math.round(canvas.width/5), 15);
+   
+    ctx.fillText(centerText[12], Math.round(canvas.width/3)+15, 10);
+    ctx.fillText(score, Math.round(canvas.width/3)+15, 20);
+    ctx.fillText("WAVE", Math.round(canvas.width/2)+20, 10);
+    ctx.fillText(waves, Math.round(canvas.width/2)+20, 20);
+    ctx.drawImage(img2,
+                0, 0, width, height,
+                Math.round(canvas.width/2+canvas.width/5), 7, width, height);
+    ctx.fillText(" x " + bombs, Math.round(canvas.width/2+canvas.width/3), 15);
+    if(lives <= 0)
+    {
+      centerText_index = 2;
+      pause = true;
+      gameStarted = false;
+      
+    }
+    ctx.fillText(centerText[centerText_index], Math.round(canvas.width/2), Math.round(canvas.height/2));
+
+}
+
+
+function spawnRandomObject() {
+
+    // create the new object
+    var object1 = {
+        // set this objects type
+        type: 0,
+
+        width: 15,
+
+        height: 15,
+
+        direction: Math.round(Math.random() * 3),
+
+		    speed: Math.random() * 1 + 0.5,
+
+        // set x randomly but at least 15px off the canvas edges
+        x: 0,
+        // set y to start on the line where objects are spawned
+        y: 0,
+        // give random image
+        image: images[0],
+
+        slowTime: false,
+
+        imageFrame: 0
+    }
+    object1.fixed_speed = object1.speed;
+    selectType = Math.random() * 100;
+    
+    if(selectType >= 85)
+    {
+      object1.type = 1;
+      object1.image = images[1];
+      object1.speed += 1.5;
+      whitefrogSound.play();
+    }
+    else
+    {
+      object1.type = 0;
+      object1.image = images[0];
+      frogSound.play();
+    }
+
+    
+
+    switch(object1.direction)
+    {
+      case 0: 
+        object1.x = Math.random() * (canvas.width - 20) + 5;
+        object1.y = 5;
+        break;
+      case 1: 
+        object1.x = Math.random() * (canvas.width - 20) + 10;
+        object1.y = canvas.height-15;
+        break;
+      case 2: 
+        object1.x = canvas.width-15;
+        object1.y = Math.random() * (canvas.height - 20) + 10;
+        break;
+      case 3: 
+        object1.x = 5;
+        object1.y = Math.random() * (canvas.height - 20) + 10;
+        break;
+    }
+
+    objects.push(object1);
+}
+
+
+function animate() {
+if(state == 1)
+{
+  minSpawnRate = 2000 - 50*waves;
+      if(minSpawnRate < 0)
+      {
+        minSpawnRate = 1;
+      }
+    // get the elapsed time
+    var time = Date.now();
+
+    // see if its time to spawn a new object
+    if (time > (lastSpawn + spawnRate) && pause == false) {
+      if(gameStarted == false)
+      {
+        gameStarted = true;
+        readySound.play();
+      }
+     
+        lastSpawn = time;
+        
+        spawnRandomObject();
+        if(is_slowTime == true)
+        {
+          is_slowTime = false;
+          normalTimeSound.play();
+        }
+        
+        centerText_index = 3;
+        /*
+        if(minSpawnRate > 0 && pause == false)
+        {
+          minSpawnRate -= reduceSpawnRate;
+        }
+        
+        else
+        {
+          minSpawnRate = 0;
+        }
+        */
+        spawnRate = Math.round(Math.random() * minSpawnRate);
+        
+    }
+
+    // request another animation frame
+    requestAnimationFrame(animate);
+
+    for (var i = 0; i < objects.length; i++) {
+        var object = objects[i];
+    
+    object.slowTime = is_slowTime;
+    
+    if(pause == true)
+    {
+      
+      object.speed = 0;
+      centerText_index = 1;
+    }
+    else
+    {
+      if(gameStarted==true && is_slowTime ==false)
+      {
+        object.speed = object.fixed_speed;
+        
+      }
+     
+    }
+    
+		if(object.y < canvas.height && object.direction === 0)
+		{
+			object.y += object.speed;
+		}
+    if(object.y < canvas.height && object.direction === 1)
+		{
+			object.y -= object.speed;
+		}
+    if(object.x < canvas.width && object.direction === 2)
+		{
+			object.x -= object.speed;
+		}
+    if(object.x < canvas.width && object.direction === 3)
+		{
+			object.x += object.speed;
+		}
+    if(object.x > canvas.width || object.x < 0 || object.y > canvas.height || object.y < 0)
+		{
+			objects.splice(i, 1);
+		}
+    
+    
+    if(is_slowTime == true)
+    {
+      object.speed = object.fixed_speed/3;
+    }
+    else
+    {
+      if(pause == false)
+      {
+        object.speed = object.fixed_speed;
+      }
+    }
+    
+    
+
+        ctx.drawImage(object.image, object.width*object.imageFrame,object.height*object.direction,object.width,object.height,Math.round(object.x), Math.round(object.y), object.width, object.height);
+        if (playerX < object.x + object.width &&
+   playerX + object.width > object.x &&
+   playerY < object.y + object.height &&
+   playerY + height > object.y && object.type == 0 && lives > 0 && pause == false) 
+   {
+   
+   if(iFrame == 0)
+   {
+    gotHit = false;
+    iFrame = iFrame_max;
+    lives--;
+    if(lives <= 0)
+    {
+      gameoverSound.play();
+    }
+    hurtSound.play();
+   }
+    
+  }
+  else if (playerX < object.x + object.width &&
+   playerX + object.width > object.x &&
+   playerY < object.y + object.height &&
+   playerY + height > object.y && object.type == 1) 
+   {
+    frog_capturedSound.play();
+    bombs++;
+    objects.splice(i, 1);
+   }
+    }
+    renderText();
+     
+}
+}
+
+// Keydown listener
+onkeydown = (e) => {
+  if(pause == false)
+  {
+    speed = 1.5;
+  }
+  
+  // Up (up / W / Z)
+  if(pause == false)
+  {
+
+  
+  if(e.keyCode == 38 || e.keyCode == 90 || e.keyCode == 87){
+    if(state == 1)
+    {
+      up = true;
+      
+    }
+    else if(state == 0)
+    {
+      setMode("up");
+      menuState();
+    }
+  }
+  
+  // Right (right / D)
+  if(e.keyCode == 39 || e.keyCode == 68){
+    if(state == 1)
+    {
+      right = true;
+    }
+    else if(state == 0)
+    {
+      setBombs();
+      menuState();
+    }
+  }
+  
+  // Down (down / S)
+  if(e.keyCode == 40 || e.keyCode == 83){
+    if(state == 1)
+    {
+      down = true;
+    }
+    else if(state == 0)
+    {
+      setMode("down");
+      menuState();
+    }
+  }
+  
+  // Left (left / A / Q)
+  if(e.keyCode == 37 || e.keyCode == 65 ||e.keyCode == 81)
+  {  
+    if(state == 1)
+    {
+      left = true;
+    }
+    else if(state == 0)
+    {
+      setLives();
+      menuState();
+    }
+  }
+ 
+  // Up (up / W / Z)
+  if(e.keyCode == 88)
+  {
+    if(bombs > 0 && can_fasterTime == true && pause==false && gameStarted==true && state==1)
+    {
+      for (var i = 0; i < objects.length; i++) 
+      {
+        objects.length = 0;
+      }
+    lastSpawn += 1000;
+    bombs--;
+    can_fasterTime = false;
+    fastbombSound.play();
+    }
+    else if(state == 0)
+    {
+      difficulty = 1;
+      state = 1;
+      
+      init();
+      gameState();
+    }
+  }
+
+  if(e.keyCode == 67)
+  {
+    if(bombs > 0 && can_slowTime == true && pause==false && state==1)
+    {
+      is_slowTime = true;
+    for (var i = 0; i < objects.length; i++) 
+    {
+      objects[i].slowTime = true;
+    }
+    lastSpawn += 2000;
+    bombs--;
+    can_slowTime = false;
+    slowbombSound.play();
+    }
+    else if(state == 0)
+    {
+      difficulty = 2;
+      state = 1;
+      
+      init();
+      gameState();
+    }
+  }
+  }
+  if(e.keyCode == 32)
+  {
+    if(state == 1)
+    {
+      if(gameStarted == true)
+      {
+        speed = 0;
+        pause = !pause;
+      }
+      else
+      {
+        location.reload();
+        
+      }
+    }
+    else if(state == 0)
+    {
+      game_startedSound.play();
+      state = 1;
+      wave_difference = waves;
+      lives_difference = 6-lives;
+      bombs_difference = 6-bombs; 
+      init();
+      gameState();
+    }
+  }
+}
+
+// Keyup listener
+onkeyup = (e) => {
+
+  // Up
+  if(e.keyCode == 38 || e.keyCode == 90 || e.keyCode == 87){
+    up = false;
+  }
+  
+  // Right
+  else if(e.keyCode == 39 || e.keyCode == 68){
+    right = false;
+  }
+  
+  // Down
+  else if(e.keyCode == 40 || e.keyCode == 83){
+    down = false;
+  }
+  
+  // Left
+  else if(e.keyCode == 37 || e.keyCode == 65 || e.keyCode == 81){
+    left = false;
+  }
+  
+  if(e.keyCode == 88)
+  {
+    can_fasterTime = true;
+  }
+
+  if(e.keyCode == 67)
+  {
+    can_slowTime = true;
+  }
+
+}
+
+function movePlayer()
+{
+	if(up==false&&down==false&&right==false&&left==false)
+  {
+	  speed = 0;
+  }
+	if(down == true && right == true)
+	{
+		angle = 315;
+	}
+	else if(down == true && left == true)
+	{
+		angle = 225;
+	}
+	else if(down == true)
+	{
+		angle = 270;
+	}
+	else if(up == true && right == true)
+	{
+		angle = 45;
+	}
+	else if(up == true && left == true)
+	{
+		angle = 135;
+	}
+	else if(up == true)
+	{
+		angle = 90;
+	}
+	
+	
+	else if(right == true)
+	{
+		angle = 0;
+
+	}
+	else if(left == true)
+	{
+		angle = 180;
+
+	}
+	radians = (360 - angle) * Math.PI / 180;
+  
+  if(playerX <= canvas.width-15)
+  {
+    playerX += Math.cos(radians) * speed;
+  }
+  else
+  {
+    playerX = canvas.width-15;
+  }
+  if(playerX <= 0)
+  {
+    playerX = 0;
+  }
+ 
+  if(playerY <= canvas.height-15)
+  {
+	  playerY += Math.sin(radians) * speed;
+  }
+  else
+  {
+    playerY = canvas.height-15;
+  }
+  if(playerY <= 0)
+  {
+	  playerY = 0;
+  }
+	
+}
+
+var frequency = 200;
+
+
+function drawFrame(frameX, canvasX, canvasY) {
+  if(! gotHit || Math.floor(Date.now() / frequency) % 2)
+  {
+    ctx.drawImage(img,
+                frameX * width, 0, width, height,
+                canvasX, canvasY, scaledWidth, scaledHeight);
+  }
+
+  
+  
+  
+}
+
+
+
+</script>
+</body>
+</html>
