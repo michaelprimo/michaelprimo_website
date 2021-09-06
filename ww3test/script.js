@@ -8,8 +8,16 @@ let ctx = canvas.getContext("2d");
 
 /* Rresize the canvas to occupy the full page, 
    by getting the widow width and height and setting it to canvas*/
- 
-canvas.width  = window.innerWidth;
+
+if(window.innerWidth > 500)
+{
+  canvas.width  = 500;
+}
+else
+{
+  canvas.width  = window.innerWidth;
+}
+
 canvas.height = window.innerHeight;
  
 //Done! Enjoy full page canvas!
@@ -61,15 +69,15 @@ let game =
   perfect: canvas.width/2-25,
   noteDistance: canvas.width/4,
   randomDistance: 4,
-  bpm: 50,
-  defaultBpm: 80,
-  chain: 0,
-  chargeBar: 0,
-  chargeLevel: 1,
-  playerHealth: 100,
-  enemyHealth: 500,
-  playerAttack: 5,
-  enemyAttack: 15
+  bpm: 60,
+  defaultBpm: 60,
+  bool_shutdown: false,
+  enemyHealth: 10,
+  max_enemyHealth: 10,
+  musicBullets: 6,
+  max_musicBullets: 6,
+  enemyCharge: 0,
+  max_enemyCharge: 6
 }
 
 let playerAnimation =
@@ -393,28 +401,29 @@ function drawTimer()
   ctx.arc(canvas.width/8, canvas.height/14, canvas.height/20, 0, 2 * Math.PI);
   ctx.closePath();
   ctx.stroke();
-  ctx.fillText("Enemy", 12.5, canvas.height/6);
-  ctx.fillText("Lives", 12.5, canvas.height/6+25);
+  ctx.fillText(game.enemyHealth + " / " + game.max_enemyHealth, 12.5, canvas.height/6);
 
   ctx.beginPath();
   ctx.lineWidth = 3;
   ctx.arc(canvas.width/2.6, canvas.height/14, canvas.height/20, 0, 2 * Math.PI);
   ctx.closePath();
   ctx.stroke();
-  ctx.fillText("Enemy", 12.5, canvas.height/6);
-  ctx.fillText("Lives", 12.5, canvas.height/6+25);
+  ctx.fillText(game.musicBullets + " / " + game.max_musicBullets, canvas.width/4, canvas.height/6);
 
   ctx.beginPath();
   ctx.lineWidth = 3;
   ctx.arc(canvas.width/1.6, canvas.height/14, canvas.height/20, 0, 2 * Math.PI);
   ctx.closePath();
   ctx.stroke();
+  ctx.fillText(game.enemyCharge + " / " + game.max_enemyCharge, canvas.width/2, canvas.height/6);
+
 
   ctx.beginPath();
   ctx.lineWidth = 3;
   ctx.arc(canvas.width/1.15, canvas.height/14, canvas.height/20, 0, 2 * Math.PI);
   ctx.closePath();
   ctx.stroke();
+  ctx.fillText(game.bpm, canvas.width/3*2, canvas.height/6);
 }
 
 function drawBullets()
@@ -545,35 +554,33 @@ function drawTrees()
 
 function checkNote(cursorX, cursorY)
 {
-  
-    if(leftChart[0].x > game.perfect-50)
+  if(leftChart[0].x > game.perfect-50)
+  {
+    if(cursorX < canvas.width/4)
     {
-        if(leftChart[0].type == 0)
-        {
-          enemyHit();
-          playSound();
-        }
-        if(leftChart[0].type == 1)
-        {  
-          playSound();
-        }
-        if(leftChart[0].type == 2)
-        {
-          playerMiss();
-        }
-        if(leftChart[0].type == 3)
-        {
-          playerMiss();
-        }
-        if(leftChart[0].type == 4)
-        {
-          playSound();
-          //changeDistance();
-        }
-        leftChart.splice(0,1);
-        rightChart.splice(0,1);
+      bulletHit();
     }
-  
+    if(cursorX > canvas.width/4 && cursorX < canvas.width/2)
+    {
+      bulletRecharge();
+    }
+    if(cursorX > canvas.width/2 && cursorX < canvas.width/4*3)
+    {
+      bulletShowdown();
+    }
+    if(cursorX > canvas.width/4*3 && cursorX < canvas.width)
+    {
+      bulletBpm();
+    }
+      if(leftChart[0].type == 0)
+      {
+        enemyHit();
+        playSound();
+      }
+      leftChart.splice(0,1);
+      rightChart.splice(0,1);
+  }
+  //beatTime();
   
   
 
@@ -582,66 +589,90 @@ function checkNote(cursorX, cursorY)
 
 function missNote()
 {
-  if(leftChart[game.curNote].type == 0)
-  {
-    playerMiss();
-  }
-  if(leftChart[game.curNote].type == 1)
-  { 
-    playerMiss();
-  }
-  if(leftChart[game.curNote].type == 2)
-  {
-    playSound();
-  }
-  if(leftChart[game.curNote].type == 3)
-  {
-    playSound();
-    changeBpm();
-  }
-  if(leftChart[game.curNote].type == 4)
-  { 
-    playerMiss();
-  }
-  
+  //playerMiss();
+  beatTime();
   leftChart.splice(0,1);
   rightChart.splice(0,1);
 }
 
+function beatTime()
+{
+  if(game.bpm > game.defaultBpm)
+  {
+    game.bpm--;
+  }
+
+  if(game.bool_shutdown == false)
+  {
+    game.enemyCharge++;
+    if(game.enemyCharge >= game.max_enemyCharge)
+    {
+      game.enemyCharge = 0;
+    }
+  }
+  else
+  {
+    game.enemyCharge -= 2;
+    if(game.enemyCharge < 0)
+    {
+      game.enemyCharge = 0;
+    }
+    game.bool_shutdown = false;
+  }
+}
+
+function bulletHit()
+{
+  if(game.musicBullets > 0)
+  {
+    game.musicBullets--;
+    game.enemyHealth--;
+  }
+}
+
+function bulletRecharge()
+{
+  if(game.musicBullets < game.max_musicBullets)
+  {
+    game.musicBullets++;
+  }
+}
+
+function bulletShowdown()
+{
+  if(game.musicBullets > 0)
+  {
+    game.musicBullets--;
+    game.bool_shutdown = true;
+  }
+}
+
+function bulletBpm()
+{
+  if(game.musicBullets > 0)
+  {
+    game.musicBullets--;
+    game.bpm += 10;
+  }
+ 
+}
+/*
 function playerMiss()
 {
   game.chain = 0;
   game.playerHealth -= game.enemyAttack;
 }
-
+*/
+/*
 function enemyHit()
 {
   game.chain++; 
   game.enemyHealth -= game.playerAttack;
 }
-
+*/
 function changeBpm()
 {
   game.bpm = (Math.random() * game.defaultBpm/2) + game.defaultBpm;
-}
-
-function changeDistance()
-{
-  if(leftChart.length > 0)
-  {
-    game.noteCounter = 0;
-    game.randomDistance = Math.floor(Math.random() * 5) + 2;
-    for(let i = 1; i < leftChart.length; i++)
-    {
-      //game.noteDistance = (Math.random() * canvas.width/2 - canvas.width/8) + canvas.width/8;
-      game.noteDistance = canvas.width/2;
-      leftChart[i].x = leftChart[0].x - game.noteCounter - game.noteDistance;
-      //leftChart[i].speed = 8/game.randomDistance;
-      rightChart[i].x = rightChart[0].x + game.noteCounter + game.noteDistance;
-      //rightChart[i].speed = 8/game.randomDistance;
-      game.noteCounter += game.noteDistance;
-    }
-  }
 }
 
 function playSound()
@@ -664,58 +695,32 @@ function playSound()
 
 document.onkeydown = function(e)
 {
-  if(e.keyCode == 32)
+  //W
+  if(e.keyCode == 87)
   {
-    checkNote();
+    bulletHit();
+  }
+  //A
+  if(e.keyCode == 65)
+  {
+    bulletRecharge();
+  }
+  //S
+  if(e.keyCode == 83)
+  {
+    bulletShowdown();
+  }
+  //D
+  if(e.keyCode == 68)
+  {
+    bulletBpm();
   }
 }
-
 
 document.onmousedown = function(e)
 {
-  let cursorX = e.clientX;
-  let cursorY = e.clientY;
+  let rect = canvas.getBoundingClientRect();
+  let cursorX = e.clientX - rect.left;
+  let cursorY = e.clientY - rect.top;
   checkNote(cursorX, cursorY);
 }
-
-/*
-canvas.click(function(e){
-  
-});
-*/
-
-/*
-function testAndExecute(elem, event, area, func){
-  // area is relative to page :
-  // var area = {
-  //     x0: 60,
-  //     y0: 60,
-  //     x1: 100,
-  //     y1: 100
-  // }    
-  elem.addEventListener(event, function(e){
-      var page = {
-          x: e.pageX,
-          y: e.pageY
-      }
-      if(page.x >= area.x0 && page.x <= area.x1 && page.y >= area.y0 && page.y <= area.y1){
-          func();
-      }
-  });
-}
-
-testAndExecute(
-  document.getElementById('example'),
-  'click',
-  {
-      x0: 60,
-      x1: 100,
-      y0: 60,
-      y1: 100
-  
-  },
-  function(){
-      alert('It worked!');
-  }
-);
-*/
