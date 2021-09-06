@@ -111,7 +111,7 @@ function loadSpheres()
     
     if(leftSphere.type <= 4)
     {
-      leftSphere.radius = 32;
+      leftSphere.radius = canvas.width/20;
       leftSphere.width = 32;
       leftSphere.height = 32;
       leftChart.push(leftSphere);
