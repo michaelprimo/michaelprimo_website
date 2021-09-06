@@ -6,6 +6,13 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
+/* Rresize the canvas to occupy the full page, 
+   by getting the widow width and height and setting it to canvas*/
+ 
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
+ 
+//Done! Enjoy full page canvas!
 
 let audioCtx = new AudioContext();
 let oscillator = audioCtx.createOscillator();
