@@ -1,3 +1,4 @@
+// remember to see taiko no tastujin boss battles and making clicking blue notes and avoiding red notes. If you miss a blue note or click to a red note then you will lose a life, otherwise you hit the enemy.
 (function () {
     let requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
