@@ -68,7 +68,7 @@ let game =
   maxNotes: 0,
   positiveNotes: 0,
   perfect: canvas.width/2,
-  noteDistance: canvas.width/4,
+  noteDistance: canvas.width/8,
   randomDistance: 4,
   bpm: 60,
   defaultBpm: 60,
