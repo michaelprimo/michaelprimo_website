@@ -47,7 +47,7 @@ let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
-[32,32,0,0,0]
+[0,32,0,32,0]
 ];
 
 let curLevelNotes = [];
