@@ -11,7 +11,7 @@ let ctx = canvas.getContext("2d");
 
 if(window.innerWidth > 500)
 {
-  canvas.width  = 500;
+  canvas.width = 500;
 }
 else
 {
@@ -46,16 +46,17 @@ let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
-[60,0,0,0,0]
+[12,12,12,12,12]
 ];
 
 let curLevelNotes = [];
 let centralSphere = 
 {
-  x: canvas.width/2-50,
-  y: canvas.height/2-50,
-  width: 100,
-  height: 100,
+  x: canvas.width/2,
+  y: canvas.height/2,
+  radius: canvas.width/10,
+  color: "black",
+  colorData: -1
 }
 
 let game =
@@ -66,7 +67,7 @@ let game =
   curNote: 0,
   maxNotes: 0,
   positiveNotes: 0,
-  perfect: canvas.width/2-25,
+  perfect: canvas.width/2,
   noteDistance: canvas.width/4,
   randomDistance: 4,
   bpm: 60,
@@ -76,6 +77,7 @@ let game =
   max_enemyHealth: 10,
   musicBullets: 6,
   max_musicBullets: 6,
+  click: 0,
   enemyCharge: 0,
   max_enemyCharge: 6
 }
@@ -115,7 +117,7 @@ function loadSpheres()
       leftChart.push(leftSphere);
       rightSphere = {...leftSphere};
       rightChart.push(rightSphere);
-      rightChart[i].x = canvas.width-rightChart[i].width*2 + Math.abs(game.noteCounter);
+      rightChart[i].x = canvas.width + Math.abs(game.noteCounter);
       game.noteCounter -= game.noteDistance;
     }
     
@@ -177,6 +179,17 @@ setMaxNotes();
 
 function drawPlayer()
 {
+  ctx.beginPath();
+  ctx.strokeStyle = centralSphere.color;
+  ctx.arc(centralSphere.x, centralSphere.y, centralSphere.radius, 0, 2 * Math.PI);
+  ctx.stroke();
+}
+
+function drawPlayer2()
+{
+  ctx.beginPath();
+  ctx.arc(canvas.width/2, canvas.height/4*2.84, 45, 0, 2 * Math.PI);
+  ctx.stroke();
   playerAnimation.frameCount++;
   //if(playerAnimation.hurtBegin == false && playerAnimation.attackBegin == false)
   //{
@@ -251,6 +264,10 @@ function chargeAnimation()
 
 function drawEnemy()
 {
+  ctx.beginPath();
+  ctx.arc(canvas.width/2, canvas.height/3.45, 45, 0, 2 * Math.PI);
+  ctx.closePath();
+  ctx.stroke();
   enemyAnimation.frameCount++;
   if(enemyAnimation.frameCount > 15)
   {
@@ -277,23 +294,18 @@ function upload()
   ctx.fillRect(0,canvas.height/2,canvas.width,canvas.height);
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
-  
-  
+
   ctx.beginPath();
   ctx.lineWidth = 3;
-  ctx.arc(canvas.width/2, canvas.height/3.45, 45, 0, 2 * Math.PI);
-  
   ctx.moveTo(0, canvas.height/2);
   ctx.lineTo(canvas.width, canvas.height/2);
-  
   ctx.closePath();
-  ctx.stroke();
   
-  ctx.beginPath();
-  ctx.arc(canvas.width/2, canvas.height/4*2.84, 45, 0, 2 * Math.PI);
-  ctx.stroke();
+ 
+  
+  
 
-  ctx.strokeRect(centralSphere.x, centralSphere.y, centralSphere.width, centralSphere.height);
+  
   ctx.beginPath();
   
   if(leftChart.length > 0)
@@ -303,24 +315,39 @@ function upload()
         {
           missNote();
         }
-    
+      //draw notes
       for(let i = 0; i < leftChart.length; i++)
       {
-        
-        if(leftChart[i].type <= 4)
+        switch(leftChart[i].type)
         {
-          
-            ctx.drawImage(notes,
-              leftChart[i].width*leftChart[i].type, 0, leftChart[i].width, leftChart[i].height,
-              leftChart[i].x, leftChart[i].y-leftChart[i].height, leftChart[i].width*2, leftChart[i].height*2);
-          
-          
-          ctx.drawImage(notes,
-            rightChart[i].width*rightChart[i].type, 0, rightChart[i].width, rightChart[i].height,
-              rightChart[i].x, rightChart[i].y-rightChart[i].height, rightChart[i].width*2, rightChart[i].height*2); 
-           
+          case 0:
+            ctx.fillStyle = "white";
+            break;
+          case 1:
+            ctx.fillStyle = "red";
+            break;
+          case 2:
+            ctx.fillStyle = "blue";
+            break;
+          case 3:
+            ctx.fillStyle = "green";
+            break;
+          case 4:
+            ctx.fillStyle = "yellow";
+            break;
+
         }
-        
+          ctx.beginPath();
+          ctx.arc(leftChart[i].x, leftChart[i].y, leftChart[i].radius, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
+
+          ctx.beginPath();
+          ctx.arc(rightChart[i].x, rightChart[i].y, rightChart[i].radius, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
       }
     }
     
@@ -329,6 +356,7 @@ function upload()
   drawLayout();
   ctx.fillStyle = "white";
   ctx.font = "50px Arial";
+  ctx.fillText(Math.floor(leftChart[0].x), canvas.width/5,canvas.height/5);
   /*
   ctx.fillText(game.playerHealth, canvas.width/3,canvas.height/10);
   ctx.fillText(game.enemyHealth, canvas.width/3*2,canvas.height/10);
@@ -351,10 +379,10 @@ function upload()
 
 function drawLayout()
 {
-  //drawPlayer();
+  drawPlayer();
   //drawEnemy();
-  drawButtons();
-  drawTimer();
+  //drawButtons();
+  //drawTimer();
   //drawTrees();
   //drawBullets();
 }
@@ -554,8 +582,11 @@ function drawTrees()
 
 function checkNote(cursorX, cursorY)
 {
-  if(leftChart[0].x > game.perfect-50)
+  game.click++;
+  
+  if(leftChart[0].x > game.perfect-canvas.width/7)
   {
+    /*
     if(cursorX < canvas.width/4)
     {
       bulletHit();
@@ -572,11 +603,13 @@ function checkNote(cursorX, cursorY)
     {
       bulletBpm();
     }
+    
       if(leftChart[0].type == 0)
       {
         enemyHit();
         playSound();
       }
+      */
       leftChart.splice(0,1);
       rightChart.splice(0,1);
   }
@@ -590,7 +623,35 @@ function checkNote(cursorX, cursorY)
 function missNote()
 {
   //playerMiss();
-  beatTime();
+  //beatTime();
+  if(centralSphere.colorData == leftChart[0].type)
+  {
+    centralSphere.color = "black";
+    centralSphere.colorData = -1;
+  }
+  else
+  {
+    switch(leftChart[0].type)
+    {
+      case 0:
+        centralSphere.color = "white";
+        break;
+      case 1:
+        centralSphere.color = "red";
+        break;
+      case 2:
+        centralSphere.color = "blue";
+        break;
+      case 3:
+        centralSphere.color = "green";
+        break;
+      case 4:
+        centralSphere.color = "yellow";
+        break;
+    }
+    centralSphere.colorData = leftChart[0].type;
+  }
+  
   leftChart.splice(0,1);
   rightChart.splice(0,1);
 }
@@ -612,7 +673,7 @@ function beatTime()
   }
   else
   {
-    game.enemyCharge = 0;
+    game.enemyCharge -= 2;
     if(game.enemyCharge < 0)
     {
       game.enemyCharge = 0;
@@ -634,7 +695,7 @@ function bulletRecharge()
 {
   if(game.musicBullets < game.max_musicBullets)
   {
-    game.musicBullets = game.max_musicBullets;
+    game.musicBullets++;
   }
 }
 
@@ -723,4 +784,5 @@ document.onmousedown = function(e)
   let cursorX = e.clientX - rect.left;
   let cursorY = e.clientY - rect.top;
   checkNote(cursorX, cursorY);
+  e.preventDefault();
 }
