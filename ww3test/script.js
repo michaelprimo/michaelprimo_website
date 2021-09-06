@@ -612,7 +612,7 @@ function beatTime()
   }
   else
   {
-    game.enemyCharge -= 2;
+    game.enemyCharge = 0;
     if(game.enemyCharge < 0)
     {
       game.enemyCharge = 0;
@@ -634,7 +634,7 @@ function bulletRecharge()
 {
   if(game.musicBullets < game.max_musicBullets)
   {
-    game.musicBullets++;
+    game.musicBullets = game.max_musicBullets;
   }
 }
 
