@@ -65,9 +65,9 @@ maxNotes: 0,
 positiveNotes: 0,
 perfect: canvas.width/2,
 noteDistance: canvas.width/4,
-randomDistance: 8,
-bpm: 128,
-defaultBpm: 128,
+randomDistance: 2,
+bpm: 300,
+defaultBpm: 300,
 bool_shutdown: false,
 playerHealth: 40,
 max_playerHealth: 40,
@@ -106,6 +106,7 @@ for(let i = 0; i < curLevelNotes.length; i++)
   leftSphere.x = game.noteCounter;
   leftSphere.y = canvas.height/2;
   leftSphere.type = curLevelNotes[i];
+
   leftSphere.speed = 8/game.randomDistance;
   
   if(leftSphere.type <= 4)
@@ -117,6 +118,7 @@ for(let i = 0; i < curLevelNotes.length; i++)
     rightSphere = {...leftSphere};
     rightChart.push(rightSphere);
     rightChart[i].x = canvas.width + Math.abs(game.noteCounter);
+    game.noteDistance = Math.floor(Math.random()*canvas.width/4) + canvas.width/8;
     game.noteCounter -= game.noteDistance;
   }
   
@@ -285,7 +287,8 @@ ctx.drawImage(enemy, 64*enemyAnimation.animation, 0, 64, 64, canvas.width/2-32, 
 
 function upload()
 {
-
+//game.bpm = game.defaultBpm + Math.round(((game.chain/game.defaultBpm)*game.defaultBpm));
+game.bpm = game.defaultBpm + (game.defaultBpm/2/game.maxNotes)*game.chain;
 ctx.clearRect(0,0,canvas.width,canvas.height);
 ctx.fillStyle = "#0D1B2A";
 ctx.fillRect(0,0,canvas.width,canvas.height/2);
@@ -312,7 +315,7 @@ if(leftChart.length > 0)
   
     if((leftChart[0].x > game.perfect))
       {
-        clearNote();
+        avoidNote();
       }
   
     //draw notes
@@ -358,6 +361,8 @@ ctx.fillStyle = "white";
 ctx.font = "50px Palatino Linotype";
 ctx.fillText(Math.floor(game.playerHealth), canvas.width/5,canvas.height/5);
 ctx.fillText(Math.floor(game.enemyHealth), canvas.width-canvas.width/5,canvas.height/5);
+ctx.fillText(Math.floor(game.bpm), canvas.width/4,canvas.height/4);
+ctx.fillText(Math.floor(game.chain), canvas.width-canvas.width/4,canvas.height/4);
 /*
 ctx.fillText(game.playerHealth, canvas.width/3,canvas.height/10);
 ctx.fillText(game.enemyHealth, canvas.width/3*2,canvas.height/10);
@@ -635,6 +640,19 @@ else
 
 }
 
+function avoidNote()
+{
+if(leftChart[0].type == 1 )
+    {
+      game.chain++;
+    }
+    if(leftChart[0].type == 2 || leftChart[0].type == 0)
+    {
+      game.chain = 0;
+      //game.bpm = game.defaultBpm + (game.defaultBpm/game.chain)+1;
+    }
+    clearNote();
+}
 function missNote()
 {
 //playerMiss();
