@@ -287,7 +287,7 @@ ctx.drawImage(enemy, 64*enemyAnimation.animation, 0, 64, 64, canvas.width/2-32, 
 
 function upload()
 {
-
+game.bpm = game.defaultBpm + Math.round(((game.chain/game.defaultBpm)*game.defaultBpm));
 ctx.clearRect(0,0,canvas.width,canvas.height);
 ctx.fillStyle = "#0D1B2A";
 ctx.fillRect(0,0,canvas.width,canvas.height/2);
