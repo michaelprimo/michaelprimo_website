@@ -106,6 +106,7 @@ for(let i = 0; i < curLevelNotes.length; i++)
   leftSphere.x = game.noteCounter;
   leftSphere.y = canvas.height/2;
   leftSphere.type = curLevelNotes[i];
+
   leftSphere.speed = 8/game.randomDistance;
   
   if(leftSphere.type <= 4)
@@ -117,6 +118,7 @@ for(let i = 0; i < curLevelNotes.length; i++)
     rightSphere = {...leftSphere};
     rightChart.push(rightSphere);
     rightChart[i].x = canvas.width + Math.abs(game.noteCounter);
+    game.noteDistance = Math.floor(Math.random()*canvas.width/4) + canvas.width/8;
     game.noteCounter -= game.noteDistance;
   }
   
