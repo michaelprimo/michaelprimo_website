@@ -51,7 +51,7 @@ let centralSphere =
 x: canvas.width/2,
 y: canvas.height/2,
 radius: canvas.width/10,
-color: "black",
+color: "white",
 colorData: -1
 }
 
