@@ -65,7 +65,7 @@ maxNotes: 0,
 positiveNotes: 0,
 perfect: canvas.width/2,
 noteDistance: canvas.width/4,
-randomDistance: 4,
+randomDistance: 2,
 bpm: 128,
 defaultBpm: 128,
 bool_shutdown: false,
@@ -76,6 +76,7 @@ max_enemyHealth: 40,
 musicBullets: 6,
 max_musicBullets: 6,
 click: 0,
+chain: 0,
 enemyCharge: 0,
 max_enemyCharge: 6
 }
@@ -613,10 +614,13 @@ if(leftChart[0].x > game.perfect-canvas.width/7)
     if(leftChart[0].type == 1 )
     {
       game.playerHealth--;
+      game.chain = 0;
     }
     if(leftChart[0].type == 2 || leftChart[0].type == 0)
     {
       game.enemyHealth--;
+      game.chain++;
+      //game.bpm = game.defaultBpm + (game.defaultBpm/game.chain)+1;
     }
     clearNote();
 }
@@ -665,7 +669,7 @@ else
 }
 */
 game.playerHealth--;
-
+game.chain = 0;
 
 }
 
@@ -805,7 +809,7 @@ let cursorY = e.clientY - rect.top;
 checkNote(cursorX, cursorY);
 e.preventDefault();
 }
-
+/*
 document.ontouchstart = function(e)
 {
 let rect = canvas.getBoundingClientRect();
@@ -814,3 +818,4 @@ let cursorY = e.clientY - rect.top;
 checkNote(cursorX, cursorY);
 e.preventDefault();
 }
+*/
