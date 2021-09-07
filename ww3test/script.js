@@ -315,7 +315,7 @@ if(leftChart.length > 0)
   
     if((leftChart[0].x > game.perfect))
       {
-        clearNote();
+        avoidNote();
       }
   
     //draw notes
@@ -640,6 +640,19 @@ else
 
 }
 
+function avoidNote()
+{
+if(leftChart[0].type == 1 )
+    {
+      game.chain++;
+    }
+    if(leftChart[0].type == 2 || leftChart[0].type == 0)
+    {
+      game.chain = 0;
+      //game.bpm = game.defaultBpm + (game.defaultBpm/game.chain)+1;
+    }
+    clearNote();
+}
 function missNote()
 {
 //playerMiss();
