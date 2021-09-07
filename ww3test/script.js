@@ -361,6 +361,8 @@ ctx.fillStyle = "white";
 ctx.font = "50px Palatino Linotype";
 ctx.fillText(Math.floor(game.playerHealth), canvas.width/5,canvas.height/5);
 ctx.fillText(Math.floor(game.enemyHealth), canvas.width-canvas.width/5,canvas.height/5);
+ctx.fillText(Math.floor(game.bpm), canvas.width/4,canvas.height/4);
+ctx.fillText(Math.floor(game.chain), canvas.width-canvas.width/4,canvas.height/4*3);
 /*
 ctx.fillText(game.playerHealth, canvas.width/3,canvas.height/10);
 ctx.fillText(game.enemyHealth, canvas.width/3*2,canvas.height/10);
