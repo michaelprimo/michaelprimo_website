@@ -408,19 +408,22 @@ function drawText()
   ctx.fillStyle = "white";
   ctx.textAlign = 'center'; 
   ctx.font = "6vh Lucida Sans Unicode";
+  if(document.monetization && document.monetization.state === 'started')
+  {
+    ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
+    ctx.beginPath()
+    ctx.moveTo(canvas.width/4,canvas.height/10);
+    ctx.lineTo(canvas.width/4*3,canvas.height/10);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.strokeStyle = "blue";
+    ctx.beginPath()
+    ctx.moveTo(canvas.width/4,canvas.height/10);
+    ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
+    ctx.closePath();
+    ctx.stroke();
+  }
   
-  ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
-  ctx.beginPath()
-  ctx.moveTo(canvas.width/4,canvas.height/10);
-  ctx.lineTo(canvas.width/4*3,canvas.height/10);
-  ctx.closePath();
-  ctx.stroke();
-  ctx.strokeStyle = "blue";
-  ctx.beginPath()
-  ctx.moveTo(canvas.width/4,canvas.height/10);
-  ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
-  ctx.closePath();
-  ctx.stroke();
 }
 
 function drawNotes()
