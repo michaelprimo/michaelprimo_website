@@ -32,7 +32,7 @@ let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
-[12,6,6,6,6,6,6]
+[0,6,7,6,7,6,6]
 ];
 let data_levelNotes = [12,6,6,6,6,6,6];
 
@@ -52,6 +52,7 @@ let game =
   points: 0,
   newColor: "white",
   bool_bpmButton: false,
+  load_bpmButton: 0,
   noteCounter: -canvas.width/2,
   maxNotes: 0,
   perfect: canvas.width/2,
@@ -60,8 +61,8 @@ let game =
   effectFrame: 0,
   bool_effectFrame: false,
   bpmPoints: 1333,
-  bpm: 144,
-  defaultBpm: 144,
+  bpm: 100,
+  defaultBpm: 100,
   playerHealth: 40,
   max_playerHealth: 40,
   enemyHealth: 30,
@@ -408,22 +409,20 @@ function drawText()
   ctx.fillStyle = "white";
   ctx.textAlign = 'center'; 
   ctx.font = "6vh Lucida Sans Unicode";
-  if(document.monetization && document.monetization.state === 'started')
-  {
-    ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
-    ctx.beginPath()
-    ctx.moveTo(canvas.width/4,canvas.height/10);
-    ctx.lineTo(canvas.width/4*3,canvas.height/10);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.strokeStyle = "blue";
-    ctx.beginPath()
-    ctx.moveTo(canvas.width/4,canvas.height/10);
-    ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
-    ctx.closePath();
-    ctx.stroke();
-  }
   
+  ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
+  ctx.fillText(game.load_bpmButton, canvas.width/2,canvas.height/4);
+  ctx.beginPath()
+  ctx.moveTo(canvas.width/4,canvas.height/10);
+  ctx.lineTo(canvas.width/4*3,canvas.height/10);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.strokeStyle = "blue";
+  ctx.beginPath()
+  ctx.moveTo(canvas.width/4,canvas.height/10);
+  ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
+  ctx.closePath();
+  ctx.stroke();
 }
 
 function drawNotes()
@@ -682,23 +681,24 @@ function draw_bpmButton()
   ctx.shadowColor = "white" // string
   ctx.fillStyle = "white" // string
   ctx.strokeStyle = "white";
-  if(game.bool_bpmButton == true)
+  if(game.load_bpmButton >= 4)
   {
     ctx.font = "3em Lucida Sans Unicode";
     ctx.shadowBlur = 10;
     ctx.lineWidth = 3;
-    ctx.fillText("BPM", canvas.width/2-canvas.width/12,canvas.height/5*3.6)
+    ctx.textAlign = "center";
+    ctx.fillText("CLICK", canvas.width/2,canvas.height/5*3.6)
   }
   else
   {
     ctx.font = "2em Lucida Sans Unicode";
     ctx.shadowBlur = 0;
     ctx.lineWidth = 0.5;
-    ctx.strokeText("EMPTY", canvas.width/2-canvas.width/11,canvas.height/5*3.55)
+    //ctx.strokeText("EMPTY", canvas.width/2-canvas.width/11,canvas.height/5*3.55)
   }
   
   ctx.beginPath();
-  ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/8, 0, 2 * Math.PI);
+  ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/(20-game.load_bpmButton*3), 0, 2 * Math.PI);
   ctx.stroke();
   ctx.closePath();
   
@@ -708,12 +708,12 @@ function draw_bpmButton()
 
 function click_bpmButton()
 {
-  if(game.bool_bpmButton == true)
+  if(game.load_bpmButton >= 4)
   {
     game.points += game.bpmPoints;
     changeBpm();
     game.bpmPoints = 1333;
-    game.bool_bpmButton = false;
+    game.load_bpmButton = 0;
   }
 }
 
@@ -784,9 +784,9 @@ function wrongNote()
 function rightNote()
 {
   game.points += (1000/(canvas.width/7)*(leftChart[0].x-(game.perfect-canvas.width/7)));
-  if(leftChart[0].type == 0)
+  if(game.load_bpmButton <= 4)
   {
-    game.bool_bpmButton = true;
+    game.load_bpmButton++;
   }
 }
 
@@ -812,7 +812,7 @@ function missNote()
 
 function clearNote()
 { 
-  if(game.bool_bpmButton == true)
+  if(game.load_bpmButton >= 4)
   {
     game.bpmPoints -= 333;
     if(game.bpmPoints < 0)
