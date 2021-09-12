@@ -32,11 +32,7 @@ let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
-[12,6,6,6,6,6,6],
-[30,17,13,17,13,16,14],
-[37,17,18,17,17,17,17],
-[43,22,22,21,21,22,21],
-[50,25,25,25,25,25,25]
+[12,6,6,6,6,6,6]
 ];
 let data_levelNotes = [12,6,6,6,6,6,6];
 
@@ -233,14 +229,15 @@ for(let i = 0; i < levelNotes[0].length; i++)
 game.positiveNotes += levelNotes[0][0] + levelNotes[0][1]; 
 }
 
-function setStage()
-{
-  resetChart();
+resetChart();
   setSpheres();
   shuffle(curLevelNotes);
   setBeatSpheres();
   loadSpheres();
   setMaxNotes();
+function setStage()
+{
+  
 }
 
 function drawPlayer()
