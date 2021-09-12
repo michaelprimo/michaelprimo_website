@@ -38,6 +38,7 @@ let levelNotes = [
 [43,22,22,21,21,22,21],
 [50,25,25,25,25,25,25]
 ];
+let data_levelNotes = [12,6,6,6,6,6,6];
 
 let curLevelNotes = [];
 let centralSphere =
@@ -63,8 +64,8 @@ let game =
   effectFrame: 0,
   bool_effectFrame: false,
   bpmPoints: 1333,
-  bpm: 100,
-  defaultBpm: 100,
+  bpm: 144,
+  defaultBpm: 144,
   playerHealth: 40,
   max_playerHealth: 40,
   enemyHealth: 30,
@@ -190,6 +191,12 @@ for(let i = 0; i < curLevelNotes.length; i++)
 
 }
 
+function resetChart()
+{
+  leftChart.length = 0;
+  rightChart.length = 0;
+  game.noteCounter = -canvas.width/2;
+}
 
 function setSpheres()
 {
@@ -226,12 +233,15 @@ for(let i = 0; i < levelNotes[0].length; i++)
 game.positiveNotes += levelNotes[0][0] + levelNotes[0][1]; 
 }
 
-setSpheres();
-shuffle(curLevelNotes);
-setBeatSpheres();
-loadSpheres();
-setMaxNotes();
-
+function setStage()
+{
+  resetChart();
+  setSpheres();
+  shuffle(curLevelNotes);
+  setBeatSpheres();
+  loadSpheres();
+  setMaxNotes();
+}
 
 function drawPlayer()
 {
@@ -312,9 +322,9 @@ function drawBackground()
   if(game.level == 50)
   {
     grd = ctx.createLinearGradient(0,50,canvas.width,canvas.height);
-    grd.addColorStop(0,"#22171a");
-    grd.addColorStop(0.5,"#6f3700");
-    grd.addColorStop(1,"#3a3a27");
+    grd.addColorStop(0,"#b73f17");
+    grd.addColorStop(0.5,"#441b0d");
+    grd.addColorStop(1,"#8c500c");
   }
   
   ctx.fillStyle = grd;
@@ -396,10 +406,24 @@ function drawBoard()
 
 function drawText()
 {
+  ctx.lineWidth = 5;
   ctx.strokeStyle = "white";
   ctx.fillStyle = "white";
-  ctx.font = "50px Lucida Sans Unicode";
-  ctx.fillText(Math.floor(game.points), canvas.width/2.5,canvas.height/6);
+  ctx.textAlign = 'center'; 
+  ctx.font = "6vh Lucida Sans Unicode";
+  
+  ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
+  ctx.beginPath()
+  ctx.moveTo(canvas.width/4,canvas.height/10);
+  ctx.lineTo(canvas.width/4*3,canvas.height/10);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.strokeStyle = "blue";
+  ctx.beginPath()
+  ctx.moveTo(canvas.width/4,canvas.height/10);
+  ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
+  ctx.closePath();
+  ctx.stroke();
 }
 
 function drawNotes()
@@ -465,7 +489,7 @@ function drawNotes()
       }
     }
     
-  for(let i = 0; i<leftChart.length; i++)
+  for(let i = 0; i<rightChart.length; i++)
   {
     leftChart[i].x += (((canvas.width/2)/60*(game.bpm/60))/leftChart[i].speed);
     rightChart[i].x -= ((canvas.width/2)/60*(game.bpm/60))/rightChart[i].speed;
@@ -530,10 +554,10 @@ function drawMenu()
   
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
-  ctx.font = "8em Lucida Sans Unicode";
+  ctx.font = "10vh Lucida Sans Unicode";
   ctx.fillText("W", canvas.width/6.2, canvas.height/5);
   ctx.fillText("3", canvas.width-canvas.width/4.2, canvas.height/5);
-  ctx.font = "4em Lucida Sans Unicode";
+  ctx.font = "5vh Lucida Sans Unicode";
   ctx.fillText("onder", canvas.width/2.8, canvas.height/8);
   ctx.fillText("anderer", canvas.width/2.8, canvas.height/5);  
   
@@ -573,10 +597,10 @@ ctx.shadowBlur = 1; // integer
 
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
-  ctx.font = "8em Lucida Sans Unicode";
+  ctx.font = "8vh Lucida Sans Unicode";
   
   ctx.fillText("S", canvas.width/6, canvas.height/5);
-  ctx.font = "4em Lucida Sans Unicode";
+  ctx.font = "4vh Lucida Sans Unicode";
   ctx.fillText("Stage 1", canvas.width/3,canvas.height/3);
   ctx.fillText("Stage 2", canvas.width/3,canvas.height/3+canvas.height/10);
   ctx.fillText("Stage 3", canvas.width/3,canvas.height/3+(canvas.height/10)*2);
@@ -616,7 +640,8 @@ function move_starfield()
 function drawMenuButtons()
 {
   ctx.lineWidth = 6;
-  ctx.font = "2em Lucida Sans Unicode";
+  ctx.font = "4.2vh Lucida Sans Unicode";
+   
   ctx.strokeStyle = "white";
   ctx.beginPath();
   switch(game.level)
@@ -642,6 +667,7 @@ function clickMenuButtons(cursorX, cursorY)
   {
     if(cursorX > buttonPosition[i].x && cursorX < buttonPosition[i].x+buttonPosition[i].width && cursorY > buttonPosition[i].y && cursorY < buttonPosition[i].y+buttonPosition[i].height && game.level == buttonPosition[i].id_curLevel)
     {
+        setStage();
         game.level = buttonPosition[i].id_nextLevel;
         cursorX = 0;
         cursorY = 0;
@@ -726,7 +752,7 @@ function checkNote(cursorX, cursorY)
       }
       if(leftChart[0].type == 2 || leftChart[0].type == 4 || leftChart[0].type == 6 || leftChart[0].type == 0)
       {
-        if(game.level == 30 && game.bool_effectFrame == true)
+        if(game.level == 30 && game.bool_effectFrame == true && leftChart[0].type != 0)
         {
           wrongNote();
         }
