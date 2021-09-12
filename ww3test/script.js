@@ -899,3 +899,25 @@ document.onkeydown = function(e)
   }
   e.preventDefault();
 }
+
+document.ontouchstart = function(e)
+{
+let rect = canvas.getBoundingClientRect();
+let cursorX = e.clientX - rect.left;
+let cursorY = e.clientY - rect.top;
+switch(game.level)
+{
+  case 0:
+  case 1:
+    clickMenuButtons(cursorX, cursorY);
+    break;
+  case 10:
+  case 20:
+  case 30:
+  case 40:
+  case 50:
+    checkNote(cursorX, cursorY);
+    break;
+}
+e.preventDefault();
+}
