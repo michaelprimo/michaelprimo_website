@@ -25,16 +25,24 @@ ctx.strokeStyle = "white";
 
 
 let starfield = [[],[],[]];
-let dialogueBox = ["Oh, are you approaching me?","Instead of running away, you are coming right through me?"];
+let dialogueBox = ["Click on blue notes","Avoid red notes","Click on the white button", "Level finished!"];
 let playerTrees = [];
 let spherePosition = [];
 let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
+[0,6,7,6,7,6,6],
+[0,10,10,10,10,10,10],
+[0,12,12,12,12,12,12],
+[0,15,14,14,15,14,15],
+[0,16,16,16,18,16,18],
+[0,6,7,6,7,6,6],
+[0,6,7,6,7,6,6],
 [0,6,7,6,7,6,6]
 ];
-let data_levelNotes = [12,6,6,6,6,6,6];
+
+let levelBpm = [100,120,144,172,200];
 
 let curLevelNotes = [];
 let centralSphere =
@@ -48,6 +56,7 @@ colorData: -1
 
 let game =
 {
+  pause: false,
   level: 0,
   points: 0,
   newColor: "white",
@@ -61,8 +70,8 @@ let game =
   effectFrame: 0,
   bool_effectFrame: false,
   bpmPoints: 1333,
-  bpm: 100,
-  defaultBpm: 100,
+  bpm: 200,
+  defaultBpm: 200,
   playerHealth: 40,
   max_playerHealth: 40,
   enemyHealth: 30,
@@ -101,7 +110,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 10
+    id_nextLevel: 11
   },
   {
     x: 0,
@@ -109,7 +118,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 20
+    id_nextLevel: 21
   },
   {
     x: 0,
@@ -117,7 +126,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 30
+    id_nextLevel: 31
   },
   {
     x: 0,
@@ -125,7 +134,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 40
+    id_nextLevel: 41
   },
   {
     x: 0,
@@ -133,8 +142,64 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 50
+    id_nextLevel: 51
   },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 11,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 52,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4-canvas.height/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 11,
+    id_nextLevel: 10
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4-canvas.height/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 21,
+    id_nextLevel: 20
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4-canvas.height/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 31,
+    id_nextLevel: 30
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4-canvas.height/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 41,
+    id_nextLevel: 40
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4-canvas.height/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 51,
+    id_nextLevel: 50
+  }
 ];
 
 
@@ -182,7 +247,6 @@ for(let i = 0; i < curLevelNotes.length; i++)
     rightChart.push(rightSphere);
     rightChart[i].x = canvas.width + Math.abs(game.noteCounter);
     game.noteDistance = Math.floor(Math.random()*canvas.width/4) + canvas.width/6;
-    //game.noteDistance = canvas.width/6;
     game.noteCounter -= game.noteDistance; 
 }
 
@@ -197,9 +261,12 @@ function resetChart()
 
 function setSpheres()
 {
-for(let i = 1; i < levelNotes[0].length; i++)
+  let levelInfo = game.level/10;
+  game.defaultBpm = levelBpm[levelInfo-1];
+  game.bpm = game.defaultBpm;
+for(let i = 1; i < levelNotes[levelInfo-1].length; i++)
 {
-  for(let j = 0; j < levelNotes[0][i]; j++)
+  for(let j = 0; j < levelNotes[levelInfo-1][i]; j++)
   {
     curLevelNotes.push(i);
   }
@@ -212,7 +279,7 @@ for (let i = array.length - 1; i > 0; i--) {
   [array[i], array[j]] = [array[j], array[i]];
 }
 }
-
+/*
 function setBeatSpheres()
 {
 for(let i = 0; i < levelNotes[0][0]; i++)
@@ -220,25 +287,23 @@ for(let i = 0; i < levelNotes[0][0]; i++)
   curLevelNotes.splice(i*4,0,0);
 }
 }
-
+*/
 function setMaxNotes()
 {
-for(let i = 0; i < levelNotes[0].length; i++)
+for(let i = 0; i < levelNotes[game.level/10-1].length; i++)
 {
-  game.maxNotes += levelNotes[0][i];
+  game.maxNotes += levelNotes[game.level/10-1][i];
 }
-game.positiveNotes += levelNotes[0][0] + levelNotes[0][1]; 
+//game.positiveNotes += levelNotes[0][0] + levelNotes[0][1]; 
 }
 
-resetChart();
-  setSpheres();
-  shuffle(curLevelNotes);
-  setBeatSpheres();
-  loadSpheres();
-  setMaxNotes();
 function setStage()
 {
-  
+  resetChart();
+  setSpheres();
+  shuffle(curLevelNotes);
+  loadSpheres();
+  setMaxNotes();
 }
 
 function drawPlayer()
@@ -365,8 +430,7 @@ function drawBackground_effect()
         rightChart[i].y = randPosition;
       }
       game.bool_effectFrame = false;
-    }
-    
+    } 
   }
   if(game.level == 30)
   {
@@ -376,7 +440,6 @@ function drawBackground_effect()
       {
         game.effectFrame++;
       }
-      
     }
     else
     {
@@ -384,9 +447,7 @@ function drawBackground_effect()
       {
         game.effectFrame--;
       }
-      
     }
-    
   }
 }
 
@@ -407,18 +468,17 @@ function drawText()
   ctx.lineWidth = 5;
   ctx.strokeStyle = "white";
   ctx.fillStyle = "white";
-  ctx.textAlign = 'center'; 
+  ctx.textAlign = 'center';
   ctx.font = "6vh Lucida Sans Unicode";
-  
-  ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/6);
-  ctx.fillText(game.load_bpmButton, canvas.width/2,canvas.height/4);
-  ctx.beginPath()
+  ctx.fillText(Math.floor(game.points), canvas.width/2,canvas.height/5);
+  ctx.fillText(Math.floor(game.maxNotes - game.curNotes), canvas.width/2,canvas.height/4);
+  ctx.beginPath();
   ctx.moveTo(canvas.width/4,canvas.height/10);
   ctx.lineTo(canvas.width/4*3,canvas.height/10);
   ctx.closePath();
   ctx.stroke();
   ctx.strokeStyle = "blue";
-  ctx.beginPath()
+  ctx.beginPath();
   ctx.moveTo(canvas.width/4,canvas.height/10);
   ctx.lineTo(canvas.width/4+(((canvas.width/2)/game.maxNotes)*game.curNotes),canvas.height/10);
   ctx.closePath();
@@ -426,16 +486,14 @@ function drawText()
 }
 
 function drawNotes()
-{ 
+{
   ctx.globalAlpha = 0.8;
   if(leftChart.length > 0)
   {
-    
       if((leftChart[0].x > game.perfect))
         {
           avoidNote();
         }
-    
       //draw notes
       for(let i = 0; i < leftChart.length; i++)
       {
@@ -445,19 +503,17 @@ function drawNotes()
         switch(leftChart[i].type)
         {
           case 0:
+          case 2:
+          case 4:
             if(game.level == 40)
             {
               ctx.fillStyle = game.newColor;
             }
             else
             {
-              ctx.fillStyle = "white";
+              ctx.fillStyle = "blue";
             }
             ctx.strokeStyle = "black";
-            break;
-          case 2:
-          case 4:
-            ctx.fillStyle = "blue";
             break;
           case 1:
           case 3:
@@ -471,7 +527,14 @@ function drawNotes()
           case 6:
             ctx.lineWidth = 7;
             ctx.fillStyle = "#0D1B2A";
-            ctx.strokeStyle = "blue";
+            if(game.level == 40)
+            {
+              ctx.strokeStyle = game.newColor;
+            }
+            else
+            {
+              ctx.strokeStyle = "blue";
+            }
             break;
         }
           ctx.beginPath();
@@ -479,7 +542,6 @@ function drawNotes()
           ctx.stroke();
           ctx.fill();
           ctx.closePath();
-  
           ctx.beginPath();
           ctx.arc(rightChart[i].x, rightChart[i].y, rightChart[i].radius, 0, 2 * Math.PI);
           ctx.stroke();
@@ -487,7 +549,10 @@ function drawNotes()
           ctx.closePath();
       }
     }
-    
+    else
+    {
+      game.level = 52;
+    }
   for(let i = 0; i<rightChart.length; i++)
   {
     leftChart[i].x += (((canvas.width/2)/60*(game.bpm/60))/leftChart[i].speed);
@@ -509,9 +574,7 @@ function getRandomColor()
 
 function upload()
 {
-  
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  
   switch(game.level)
   {
     case 0:
@@ -524,11 +587,19 @@ function upload()
     case 20:
     case 30:
     case 40:
-    case 50:    
+    case 50:
       drawLayout();
       break;
+    case 11:
+    case 21:
+    case 31:
+    case 41:
+    case 51:
+      drawLevel_selection();
+      break;
+    case 52:
+      drawLevel_ending();
   }
-  
   requestAnimationFrame(upload);
 }
 
@@ -550,65 +621,80 @@ function drawMenu()
   ctx.fillRect(canvas.width/20,canvas.height/2-canvas.height/40,canvas.width,canvas.height/20);
   // center vertically window
   ctx.fillRect(canvas.width/2-canvas.width/40,0,canvas.width/20,canvas.height);
-  
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
+  ctx.textAlign = 'center';
   ctx.font = "10vh Lucida Sans Unicode";
-  ctx.fillText("W", canvas.width/6.2, canvas.height/5);
-  ctx.fillText("3", canvas.width-canvas.width/4.2, canvas.height/5);
+  ctx.fillText("W", canvas.width/10*3, canvas.height/5);
+  ctx.fillText("3", canvas.width/10*7, canvas.height/5);
   ctx.font = "5vh Lucida Sans Unicode";
-  ctx.fillText("onder", canvas.width/2.8, canvas.height/8);
-  ctx.fillText("anderer", canvas.width/2.8, canvas.height/5);  
-  
+  ctx.fillText("onder", canvas.width/2, canvas.height/6);
+  ctx.fillText("anderer", canvas.width/2, canvas.height/5);
   drawMenuButtons();
-  
-  
 }
 
 function drawStage()
 {
-  /*
-  // Assuming your canvas element is ctx
-ctx.shadowColor = "red" // string
-//Color of the shadow;  RGB, RGBA, HSL, HEX, and other inputs are valid.
-ctx.shadowOffsetX = 0; // integer
-//Horizontal distance of the shadow, in relation to the text.
-ctx.shadowOffsetY = 0; // integer
-//Vertical distance of the shadow, in relation to the text.
-ctx.shadowBlur = 1; // integer
-//Blurring effect to the shadow, the larger the value, the greater the blur.
-*/
-
   ctx.fillStyle = "#1d0530";
   ctx.fillRect(0,0,canvas.width,canvas.height);
- 
   move_starfield();
   ctx.strokeStyle = "#fff";
-  
   // center vertically window
   for(let i = 3; i<8; i++)
   {
     ctx.strokeRect(buttonPosition[i].x,buttonPosition[i].y,buttonPosition[i].width,buttonPosition[i].height);
   }
-  
-  
-
-
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
-  ctx.font = "8vh Lucida Sans Unicode";
-  
-  ctx.fillText("S", canvas.width/6, canvas.height/5);
-  ctx.font = "4vh Lucida Sans Unicode";
-  ctx.fillText("Stage 1", canvas.width/3,canvas.height/3);
-  ctx.fillText("Stage 2", canvas.width/3,canvas.height/3+canvas.height/10);
-  ctx.fillText("Stage 3", canvas.width/3,canvas.height/3+(canvas.height/10)*2);
-  ctx.fillText("Stage 4", canvas.width/3,canvas.height/3+(canvas.height/10)*3);
-  ctx.fillText("Stage 5", canvas.width/3,canvas.height/3+(canvas.height/10)*4);
-  ctx.fillText("tage", canvas.width/3, canvas.height/8);
-  ctx.fillText("elect", canvas.width/3, canvas.height/5);  
+  ctx.textAlign = "center";
+  ctx.font = "10vh Lucida Sans Unicode";
+  ctx.fillText("S",  canvas.width/10*3.5, canvas.height/5);
+  ctx.font = "5vh Lucida Sans Unicode";
+  ctx.fillText("Stage 1", canvas.width/2,canvas.height/3.1);
+  ctx.fillText("Stage 2", canvas.width/2,canvas.height/3.1+canvas.height/10);
+  ctx.fillText("Stage 3", canvas.width/2,canvas.height/3.1+(canvas.height/10)*2);
+  ctx.fillText("Stage 4", canvas.width/2,canvas.height/3.1+(canvas.height/10)*3);
+  ctx.fillText("Stage 5", canvas.width/2,canvas.height/3.1+(canvas.height/10)*4);
+  ctx.fillText("tage", canvas.width/2, canvas.height/6);
+  ctx.fillText("elect", canvas.width/2, canvas.height/5);
   drawMenuButtons();
-  
+}
+
+function drawLevel_selection()
+{
+  ctx.fillStyle = "#1d0530";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  move_starfield();
+  ctx.strokeStyle = "#fff";
+  // center vertically window
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "white";
+  ctx.textAlign = "center";
+  ctx.font = "10vh Lucida Sans Unicode";
+  ctx.fillText("Stage 1",  canvas.width/2, canvas.height/8);
+  ctx.font = "5vh Lucida Sans Unicode";
+  ctx.fillText(dialogueBox[0],  canvas.width/2, canvas.height/5);
+  ctx.fillText(dialogueBox[1],  canvas.width/2, canvas.height/4);
+  ctx.fillText(dialogueBox[2],  canvas.width/2, canvas.height/3.4);
+  drawMenuButtons();
+}
+
+function drawLevel_ending()
+{
+  ctx.fillStyle = "#1d0530";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  move_starfield();
+  ctx.strokeStyle = "#fff";
+  // center vertically window
+  ctx.fillStyle = "white";
+  ctx.strokeStyle = "white";
+  ctx.textAlign = "center";
+  ctx.font = "10vh Lucida Sans Unicode";
+  ctx.fillText("Stage 1",  canvas.width/2, canvas.height/8);
+  ctx.font = "5vh Lucida Sans Unicode";
+  ctx.fillText(dialogueBox[3],  canvas.width/2, canvas.height/5);
+  ctx.fillText("Score: " + game.points,  canvas.width/2, canvas.height/4);
+  drawMenuButtons();
 }
 
 function load_starfield()
@@ -625,7 +711,7 @@ function move_starfield()
 {
   ctx.fillStyle = "white";
   for(let i = 0; i < 100; i++)
-  { 
+  {
     ctx.font = starfield[2][i] + "em Lucida Sans Unicode";
     starfield[0][i] += starfield[2][i];
     if(starfield[0][i] >= canvas.width)
@@ -639,24 +725,39 @@ function move_starfield()
 function drawMenuButtons()
 {
   ctx.lineWidth = 6;
-  ctx.font = "4.2vh Lucida Sans Unicode";
-   
+  ctx.font = "4vh Lucida Sans Unicode";
   ctx.strokeStyle = "white";
+  ctx.textAlign = "center";
   ctx.beginPath();
   switch(game.level)
   {
     case 0:
       ctx.arc(canvas.width/2, canvas.height/5*4, canvas.width/8, 0, 2 * Math.PI);
-      ctx.fillText("WANDER", canvas.width/2.6,canvas.height/5*4.1);
+      ctx.fillText("PLAY", canvas.width/2,canvas.height/5*4.05);
       break;
     case 1:
+    case 52:
       ctx.arc(canvas.width/2, canvas.height/5*4.5, canvas.width/8, 0, 2 * Math.PI);
-      ctx.fillText("BACK", canvas.width/2.35,canvas.height/5*4.55);
+      ctx.fillText("BACK", canvas.width/2,canvas.height/5*4.55);
+      ctx.closePath();
+      ctx.stroke();
+      break;
+    case 11:
+    case 21:
+    case 31:
+    case 41:
+    case 51:
+      ctx.arc(canvas.width/2, canvas.height/5*4.5, canvas.width/8, 0, 2 * Math.PI);
+      ctx.fillText("BACK", canvas.width/2,canvas.height/5*4.55);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/8, 0, 2 * Math.PI);
+      ctx.fillText("PLAY", canvas.width/2,canvas.height/5*3.55);
       break;
   }
   ctx.stroke();
   ctx.closePath();
-  //ctx.fillRect(buttonPosition[1].x, buttonPosition[1].y, buttonPosition[1].width, buttonPosition[1].height);
 }
 
 function clickMenuButtons(cursorX, cursorY)
@@ -666,44 +767,52 @@ function clickMenuButtons(cursorX, cursorY)
   {
     if(cursorX > buttonPosition[i].x && cursorX < buttonPosition[i].x+buttonPosition[i].width && cursorY > buttonPosition[i].y && cursorY < buttonPosition[i].y+buttonPosition[i].height && game.level == buttonPosition[i].id_curLevel)
     {
-        setStage();
         game.level = buttonPosition[i].id_nextLevel;
         cursorX = 0;
         cursorY = 0;
+        switch(game.level)
+        {
+          case 10:
+          case 20:
+          case 30:
+          case 40:
+          case 50:
+            setStage();
+            break;
+          
+        }
     }
-     
   }
 }
 
 function draw_bpmButton()
 {
-  
-  ctx.shadowColor = "white" // string
-  ctx.fillStyle = "white" // string
+  ctx.shadowColor = "white"; // string
+  ctx.fillStyle = "white"; // string
   ctx.strokeStyle = "white";
+  ctx.font = "1.7em Lucida Sans Unicode";
   if(game.load_bpmButton >= 4)
   {
-    ctx.font = "3em Lucida Sans Unicode";
+   
     ctx.shadowBlur = 10;
     ctx.lineWidth = 3;
     ctx.textAlign = "center";
-    ctx.fillText("CLICK", canvas.width/2,canvas.height/5*3.6)
+    ctx.fillText("CLICK", canvas.width/2,canvas.height/5*3.6);
   }
   else
   {
-    ctx.font = "2em Lucida Sans Unicode";
     ctx.shadowBlur = 0;
     ctx.lineWidth = 0.5;
-    //ctx.strokeText("EMPTY", canvas.width/2-canvas.width/11,canvas.height/5*3.55)
+    ctx.strokeText("EMPTY", canvas.width/2,canvas.height/5*3.6);
   }
-  
   ctx.beginPath();
-  ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/(20-game.load_bpmButton*3), 0, 2 * Math.PI);
+  ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/8, 0, 2 * Math.PI);
   ctx.stroke();
   ctx.closePath();
-  
- 
-  
+  ctx.beginPath();
+  ctx.arc(canvas.width/2, canvas.height/5*3.5, canvas.width/(32-game.load_bpmButton*6), 0, 2 * Math.PI);
+  ctx.stroke();
+  ctx.closePath();
 }
 
 function click_bpmButton()
@@ -768,8 +877,6 @@ function checkNote(cursorX, cursorY)
       missNote();
     }
   }
-  
-
 }
 
 function wrongNote()
@@ -784,7 +891,7 @@ function wrongNote()
 function rightNote()
 {
   game.points += (1000/(canvas.width/7)*(leftChart[0].x-(game.perfect-canvas.width/7)));
-  if(game.load_bpmButton <= 4)
+  if(game.load_bpmButton < 4)
   {
     game.load_bpmButton++;
   }
@@ -811,7 +918,7 @@ function missNote()
 }
 
 function clearNote()
-{ 
+{
   if(game.load_bpmButton >= 4)
   {
     game.bpmPoints -= 333;
@@ -820,7 +927,7 @@ function clearNote()
       game.bpmPoints = 1;
     }
   }
-  if(leftChart[0].type == 0)
+  if(leftChart[0].type == 2 || leftChart[0].type == 4 || leftChart[0].type == 6)
   {
     if(game.level == 10 || game.level == 20 || game.level == 30 || game.level == 40 || game.level == 50)
     {
@@ -839,7 +946,6 @@ function clearNote()
       }
     }
   }
-  
   game.curNotes++;
   leftChart.splice(0,1);
   rightChart.splice(0,1);
@@ -869,6 +975,16 @@ with(new AudioContext)
     */
 }
 
+function saveProgress()
+{
+  localStorage.setItem("lastname", "Smith");
+}
+
+function loadProgress()
+{
+  localStorage.getItem("lastname");
+}
+
 document.onmousedown = function(e)
 {
 let rect = canvas.getBoundingClientRect();
@@ -878,6 +994,12 @@ switch(game.level)
 {
   case 0:
   case 1:
+  case 11:
+  case 21:
+  case 31:
+  case 41:
+  case 51:
+  case 52:
     clickMenuButtons(cursorX, cursorY);
     break;
   case 10:
@@ -889,7 +1011,7 @@ switch(game.level)
     break;
 }
 e.preventDefault();
-}
+};
 
 document.onkeydown = function(e)
 {
@@ -898,7 +1020,7 @@ document.onkeydown = function(e)
     click_bpmButton();
   }
   e.preventDefault();
-}
+};
 
 document.ontouchstart = function(e)
 {
@@ -909,6 +1031,11 @@ switch(game.level)
 {
   case 0:
   case 1:
+  case 11:
+  case 21:
+  case 31:
+  case 41:
+  case 51:
     clickMenuButtons(cursorX, cursorY);
     break;
   case 10:
