@@ -257,6 +257,8 @@ function resetChart()
   leftChart.length = 0;
   rightChart.length = 0;
   game.noteCounter = -canvas.width/2;
+  game.points = 0;
+  game.load_bpmButton = 0;
 }
 
 function setSpheres()
@@ -671,7 +673,7 @@ function drawLevel_selection()
   ctx.strokeStyle = "white";
   ctx.textAlign = "center";
   ctx.font = "10vh Lucida Sans Unicode";
-  ctx.fillText("Stage 1",  canvas.width/2, canvas.height/8);
+  ctx.fillText("Stage "+game.level/10,  canvas.width/2, canvas.height/8);
   ctx.font = "5vh Lucida Sans Unicode";
   ctx.fillText(dialogueBox[0],  canvas.width/2, canvas.height/5);
   ctx.fillText(dialogueBox[1],  canvas.width/2, canvas.height/4);
@@ -693,7 +695,7 @@ function drawLevel_ending()
   ctx.fillText("Stage 1",  canvas.width/2, canvas.height/8);
   ctx.font = "5vh Lucida Sans Unicode";
   ctx.fillText(dialogueBox[3],  canvas.width/2, canvas.height/5);
-  ctx.fillText("Score: " + game.points,  canvas.width/2, canvas.height/4);
+  ctx.fillText("Score: " + Math.floor(game.points),  canvas.width/2, canvas.height/4);
   drawMenuButtons();
 }
 
