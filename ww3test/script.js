@@ -671,13 +671,18 @@ function upload()
 
 function drawMenu()
 {
+  let grd;
   if(document.monetization && document.monetization.state === 'started')
       {
-        ctx.fillStyle = "#1d0530";
+    grd = ctx.createLinearGradient(0,canvas.height/12,canvas.width,canvas.height);
+    grd.addColorStop(0,"#22171a");
+    grd.addColorStop(0.5,"#6f3700");
+    grd.addColorStop(1,"#3a3a27");
+    ctx.fillStyle = grd;
       }
   else
   {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#1d0530";
   }
   ctx.fillRect(0,0,canvas.width,canvas.height);
   move_starfield();
@@ -708,7 +713,19 @@ function drawMenu()
 
 function drawStage()
 {
-  ctx.fillStyle = "#1d0530";
+  let grd;
+  if(document.monetization && document.monetization.state === 'started')
+      {
+    grd = ctx.createLinearGradient(0,canvas.height/12,canvas.width,canvas.height);
+    grd.addColorStop(0,"#22171a");
+    grd.addColorStop(0.5,"#6f3700");
+    grd.addColorStop(1,"#3a3a27");
+    ctx.fillStyle = grd;
+      }
+  else
+  {
+    ctx.fillStyle = "#1d0530";
+  }
   ctx.fillRect(0,0,canvas.width,canvas.height);
   move_starfield();
   ctx.strokeStyle = "#fff";
