@@ -32,17 +32,19 @@ let leftChart = [];
 let rightChart = [];
 let curNotes = [];
 let levelNotes = [
-[0,6,7,6,7,6,6],
+[0,7,7,6,7,7,6],
 [0,10,10,10,10,10,10],
 [0,12,12,12,12,12,12],
 [0,15,14,14,15,14,15],
 [0,16,16,16,18,16,18],
-[0,6,7,6,7,6,6],
-[0,6,7,6,7,6,6],
-[0,6,7,6,7,6,6]
+[0,0,0,0,0,0,0,0]
 ];
 
-let levelBpm = [100,120,144,172,200];
+let levelBpm = [100,120,144,172,200,0];
+
+let progress;
+
+loadProgress();
 
 let curLevelNotes = [];
 let centralSphere =
@@ -57,13 +59,16 @@ colorData: -1
 let game =
 {
   pause: false,
+  load_ending: 0,
   level: 0,
   points: 0,
   newColor: "white",
+  positiveNotes: 0,
   bool_bpmButton: false,
   load_bpmButton: 0,
   noteCounter: -canvas.width/2,
   maxNotes: 0,
+  musicFrame: 0,
   perfect: canvas.width/2,
   noteDistance: canvas.width/4,
   randomDistance: 2,
@@ -77,7 +82,10 @@ let game =
   enemyHealth: 30,
   max_enemyHealth: 30,
   curNotes: 0,
-  chain: 0
+  chain: 0,
+  whiteNotes: 0,
+  blueNotes: 0,
+  maxScore: 0
 };
 
 let buttonPosition =
@@ -95,6 +103,14 @@ let buttonPosition =
     height: canvas.width/4,
     id_curLevel: 0,
     id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*3-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 0,
+    id_nextLevel: 60
   },
   {
     x: canvas.width/2-canvas.width/8,
@@ -118,7 +134,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 21
+    id_nextLevel: 22
   },
   {
     x: 0,
@@ -126,7 +142,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 31
+    id_nextLevel: 33
   },
   {
     x: 0,
@@ -134,7 +150,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 41
+    id_nextLevel: 44
   },
   {
     x: 0,
@@ -142,7 +158,7 @@ let buttonPosition =
     width: canvas.width/10*9+canvas.width/10,
     height: canvas.height/10,
     id_curLevel: 1,
-    id_nextLevel: 51
+    id_nextLevel: 55
   },
   {
     x: canvas.width/2-canvas.width/8,
@@ -150,6 +166,38 @@ let buttonPosition =
     width: canvas.width/4,
     height: canvas.width/4,
     id_curLevel: 11,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 22,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 33,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 44,
+    id_nextLevel: 1
+  },
+  {
+    x: canvas.width/2-canvas.width/8,
+    y: canvas.height/5*4.5-canvas.width/8,
+    width: canvas.width/4,
+    height: canvas.width/4,
+    id_curLevel: 55,
     id_nextLevel: 1
   },
   {
@@ -173,7 +221,7 @@ let buttonPosition =
     y: canvas.height/5*4-canvas.height/8,
     width: canvas.width/4,
     height: canvas.width/4,
-    id_curLevel: 21,
+    id_curLevel: 22,
     id_nextLevel: 20
   },
   {
@@ -181,7 +229,7 @@ let buttonPosition =
     y: canvas.height/5*4-canvas.height/8,
     width: canvas.width/4,
     height: canvas.width/4,
-    id_curLevel: 31,
+    id_curLevel: 33,
     id_nextLevel: 30
   },
   {
@@ -189,7 +237,7 @@ let buttonPosition =
     y: canvas.height/5*4-canvas.height/8,
     width: canvas.width/4,
     height: canvas.width/4,
-    id_curLevel: 41,
+    id_curLevel: 44,
     id_nextLevel: 40
   },
   {
@@ -197,7 +245,7 @@ let buttonPosition =
     y: canvas.height/5*4-canvas.height/8,
     width: canvas.width/4,
     height: canvas.width/4,
-    id_curLevel: 51,
+    id_curLevel: 55,
     id_nextLevel: 50
   }
 ];
@@ -223,6 +271,14 @@ load_starfield();
 
 requestAnimationFrame(upload);
 
+function randomLevel()
+{
+  levelBpm[5] = (Math.floor(Math.random()*25)*4)+100;
+  for(let i = 1; i<levelNotes[5].length; i++)
+  {
+    levelNotes[5][i] = Math.floor(Math.random()*25);
+  }
+}
 
 function loadSpheres()
 {
@@ -254,11 +310,16 @@ for(let i = 0; i < curLevelNotes.length; i++)
 
 function resetChart()
 {
+  curLevelNotes.length = 0;
   leftChart.length = 0;
   rightChart.length = 0;
+  game.load_ending = 0;
   game.noteCounter = -canvas.width/2;
   game.points = 0;
+  game.curNotes = 0;
+  game.maxNotes = 0;
   game.load_bpmButton = 0;
+  game.bool_effectFrame = false;
 }
 
 function setSpheres()
@@ -296,7 +357,7 @@ for(let i = 0; i < levelNotes[game.level/10-1].length; i++)
 {
   game.maxNotes += levelNotes[game.level/10-1][i];
 }
-//game.positiveNotes += levelNotes[0][0] + levelNotes[0][1]; 
+  game.positiveNotes += levelNotes[game.level/10-1][2] + levelNotes[game.level/10-1][4] + levelNotes[game.level/10-1][6]; 
 }
 
 function setStage()
@@ -315,7 +376,7 @@ function drawPlayer()
   ctx.globalAlpha = 0.65;
   ctx.beginPath();
   ctx.strokeStyle = centralSphere.color;
-  if(game.level == 30 && game.bool_effectFrame == true)
+  if(game.level == 30 && game.bool_effectFrame == false)
   {
     ctx.fillStyle = "#3f1208";
   }
@@ -333,7 +394,14 @@ function drawPlayer()
 
 function drawEnemy()
 {
-ctx.fillStyle = "#3f1208";
+if(game.level == 30 && game.bool_effectFrame == false)
+  {
+    ctx.fillStyle = "#080c3f";
+  }
+  else
+  {
+    ctx.fillStyle = "#3f1208";
+  }
 ctx.lineWidth = 1;
 ctx.beginPath();
 ctx.globalAlpha = 0.8;
@@ -434,23 +502,6 @@ function drawBackground_effect()
       game.bool_effectFrame = false;
     } 
   }
-  if(game.level == 30)
-  {
-    if(game.bool_effectFrame == false)
-    {
-      if(game.effectFrame <= 8)
-      {
-        game.effectFrame++;
-      }
-    }
-    else
-    {
-      if(game.effectFrame >= 0)
-      {
-        game.effectFrame--;
-      }
-    }
-  }
 }
 
 function drawBoard()
@@ -489,6 +540,12 @@ function drawText()
 
 function drawNotes()
 {
+  game.musicFrame++;
+  if(game.musicFrame >= 60)
+  {
+    playSound();
+    game.musicFrame = 0;
+  }
   ctx.globalAlpha = 0.8;
   if(leftChart.length > 0)
   {
@@ -553,7 +610,14 @@ function drawNotes()
     }
     else
     {
-      game.level = 52;
+      game.load_ending++;
+      if(game.load_ending >= 60)
+      {
+        saveProgress(game.level/10-1);
+        game.level = 52;
+        
+      }
+     
     }
   for(let i = 0; i<rightChart.length; i++)
   {
@@ -593,10 +657,10 @@ function upload()
       drawLayout();
       break;
     case 11:
-    case 21:
-    case 31:
-    case 41:
-    case 51:
+    case 22:
+    case 33:
+    case 44:
+    case 55:
       drawLevel_selection();
       break;
     case 52:
@@ -610,7 +674,7 @@ function drawMenu()
   ctx.fillStyle = "#1d0530";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   move_starfield();
-  ctx.fillStyle = "#471e21";
+  ctx.fillStyle = "#471e22";
   // left window
   ctx.fillRect(0,0,canvas.width/20,canvas.height);
   //right window
@@ -673,7 +737,7 @@ function drawLevel_selection()
   ctx.strokeStyle = "white";
   ctx.textAlign = "center";
   ctx.font = "10vh Lucida Sans Unicode";
-  ctx.fillText("Stage "+game.level/10,  canvas.width/2, canvas.height/8);
+  ctx.fillText("Stage "+ game.level/11,  canvas.width/2, canvas.height/8);
   ctx.font = "5vh Lucida Sans Unicode";
   ctx.fillText(dialogueBox[0],  canvas.width/2, canvas.height/5);
   ctx.fillText(dialogueBox[1],  canvas.width/2, canvas.height/4);
@@ -683,6 +747,7 @@ function drawLevel_selection()
 
 function drawLevel_ending()
 {
+  setMaxScore();
   ctx.fillStyle = "#1d0530";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   move_starfield();
@@ -691,12 +756,61 @@ function drawLevel_ending()
   ctx.fillStyle = "white";
   ctx.strokeStyle = "white";
   ctx.textAlign = "center";
-  ctx.font = "10vh Lucida Sans Unicode";
-  ctx.fillText("Stage 1",  canvas.width/2, canvas.height/8);
+  ctx.font = "7vh Lucida Sans Unicode";
+  ctx.fillText("Level Complete!",  canvas.width/2, canvas.height/8);
   ctx.font = "5vh Lucida Sans Unicode";
-  ctx.fillText(dialogueBox[3],  canvas.width/2, canvas.height/5);
-  ctx.fillText("Score: " + Math.floor(game.points),  canvas.width/2, canvas.height/4);
+  ctx.fillText("Your score is: " + Math.floor(game.points),  canvas.width/2, canvas.height/4);
+  ctx.fillText("Your rank is: " + calculateRank(),  canvas.width/2, canvas.height/3);
+  if(game.points >= game.maxScore/100*70)
+  {
+    ctx.fillText("You passed the stage!",  canvas.width/2, canvas.height/10*8);
+  }
+  else
+  {
+    ctx.fillText("Get C (" + game.maxScore/100*70 + ") points!",  canvas.width/2, canvas.height/10*8);
+  }
+  ctx.fillText("The maximum score is: " + game.maxScore,  canvas.width/2, canvas.height/2);
   drawMenuButtons();
+}
+
+function setMaxScore()
+{
+  game.whiteNotes = 1000*(game.maxNotes/4);
+  game.blueNotes = 1000*(game.positiveNotes);
+  game.maxScore = game.whiteNotes + game.blueNotes;
+}
+
+function calculateRank()
+{
+  
+  if(game.points >= (game.maxScore/100)*95)
+  {
+    return "S";
+  }
+  if(game.points >= (game.maxScore/100)*90 && game.points < (game.maxScore/100)*95)
+  {
+    return "A";
+  }
+  if(game.points >= (game.maxScore/100)*80 && game.points < (game.maxScore/100)*90)
+  {
+    return "B";
+  }
+  if(game.points >= (game.maxScore/100)*70 && game.points < (game.maxScore/100)*80)
+  {
+    return "C";
+  }
+  if(game.points >= (game.maxScore/100)*60 && game.points < (game.maxScore/100)*70)
+  {
+    return "D";
+  }
+  if(game.points >= (game.maxScore/100)*50 && game.points < (game.maxScore/100)*60)
+  {
+    return "E";
+  }
+  if(game.points < (game.maxScore/100)*50)
+  {
+    return "F";
+  }
 }
 
 function load_starfield()
@@ -736,6 +850,11 @@ function drawMenuButtons()
     case 0:
       ctx.arc(canvas.width/2, canvas.height/5*4, canvas.width/8, 0, 2 * Math.PI);
       ctx.fillText("PLAY", canvas.width/2,canvas.height/5*4.05);
+      if(document.monetization && document.monetization.start)
+      {
+        ctx.arc(canvas.width/2, canvas.height/5*3, canvas.width/8, 0, 2 * Math.PI);
+        ctx.fillText("COIL", canvas.width/2,canvas.height/5*4.05);
+      }
       break;
     case 1:
     case 52:
@@ -745,10 +864,10 @@ function drawMenuButtons()
       ctx.stroke();
       break;
     case 11:
-    case 21:
-    case 31:
-    case 41:
-    case 51:
+    case 22:
+    case 33:
+    case 44:
+    case 55:
       ctx.arc(canvas.width/2, canvas.height/5*4.5, canvas.width/8, 0, 2 * Math.PI);
       ctx.fillText("BACK", canvas.width/2,canvas.height/5*4.55);
       ctx.closePath();
@@ -825,6 +944,23 @@ function click_bpmButton()
     changeBpm();
     game.bpmPoints = 1333;
     game.load_bpmButton = 0;
+    a=(notes,center,duration,decaystart,decayduration,interval,volume,waveform,i)=>{
+      with(A=new AudioContext)
+        with(G=createGain())
+          for(i of notes){
+            with(O=createOscillator()){
+              connect(G),
+              G.connect(destination),
+              start(i[0]*interval),
+              frequency.setValueAtTime(center*1.06**(13-i[1]),i[0]*interval),
+              type=waveform,
+              gain.setValueAtTime(volume,i[0]*interval),
+              gain.setTargetAtTime(1e-5,i[0]*interval+decaystart,decayduration),
+              stop(i[0]*interval+duration);
+            }
+         }
+    }
+    a([[0,Math.floor(Math.random()*24)]],400,.5,.5,.03,.2,.1,'');
   }
 }
 
@@ -852,7 +988,7 @@ function checkNote(cursorX, cursorY)
     {
       if(leftChart[0].type == 1 || leftChart[0].type == 3 || leftChart[0].type == 5)
       {
-        if(game.level == 30 && game.bool_effectFrame == true)
+        if(game.level == 30 && game.bool_effectFrame == false)
         {
           rightNote();
         }
@@ -863,7 +999,7 @@ function checkNote(cursorX, cursorY)
       }
       if(leftChart[0].type == 2 || leftChart[0].type == 4 || leftChart[0].type == 6 || leftChart[0].type == 0)
       {
-        if(game.level == 30 && game.bool_effectFrame == true && leftChart[0].type != 0)
+        if(game.level == 30 && game.bool_effectFrame == false)
         {
           wrongNote();
         }
@@ -884,6 +1020,23 @@ function checkNote(cursorX, cursorY)
 function wrongNote()
 {
   game.points -= (1000/(canvas.width/7)*(leftChart[0].x-(game.perfect-canvas.width/7)));
+  a=(notes,center,duration,decaystart,decayduration,interval,volume,waveform,i)=>{
+    with(A=new AudioContext)
+      with(G=createGain())
+        for(i of notes){
+          with(O=createOscillator()){
+            connect(G),
+            G.connect(destination),
+            start(i[0]*interval),
+            frequency.setValueAtTime(center*1.06**(13-i[1]),i[0]*interval),
+            type=waveform,
+            gain.setValueAtTime(volume,i[0]*interval),
+            gain.setTargetAtTime(1e-5,i[0]*interval+decaystart,decayduration),
+            stop(i[0]*interval+duration);
+          }
+       }
+  }
+  a([[0,1]],400,.5,.5,.03,.2,.1,'');
   if(game.points < 0)
   {
     game.points = 0;
@@ -893,10 +1046,23 @@ function wrongNote()
 function rightNote()
 {
   game.points += (1000/(canvas.width/7)*(leftChart[0].x-(game.perfect-canvas.width/7)));
-  if(game.load_bpmButton < 4)
-  {
-    game.load_bpmButton++;
+  a=(notes,center,duration,decaystart,decayduration,interval,volume,waveform,i)=>{
+    with(A=new AudioContext)
+      with(G=createGain())
+        for(i of notes){
+          with(O=createOscillator()){
+            connect(G),
+            G.connect(destination),
+            start(i[0]*interval),
+            frequency.setValueAtTime(center*1.06**(13-i[1]),i[0]*interval),
+            type=waveform,
+            gain.setValueAtTime(volume,i[0]*interval),
+            gain.setTargetAtTime(1e-5,i[0]*interval+decaystart,decayduration),
+            stop(i[0]*interval+duration);
+          }
+       }
   }
+  a([[0,Math.floor(Math.random()*10)+10]],400,.5,.5,.03,.2,.1,'');
 }
 
 function avoidNote()
@@ -921,6 +1087,18 @@ function missNote()
 
 function clearNote()
 {
+  if(game.load_bpmButton < 4)
+  {
+    game.load_bpmButton++;
+  }
+  /*
+  game.effectFrame++;
+  if(game.effectFrame >= 4 && game.level == 30)
+  {
+    game.bool_effectFrame = !game.bool_effectFrame;
+    game.effectFrame = 0;
+  }
+  */
   if(game.load_bpmButton >= 4)
   {
     game.bpmPoints -= 333;
@@ -941,10 +1119,9 @@ function clearNote()
       {
         changeBpm();
       }
-      game.bool_effectFrame = !game.bool_effectFrame;
-      if(game.effectFrame > 1)
+      if(game.level != 30)
       {
-        game.effectFrame = 0;
+        game.bool_effectFrame = !game.bool_effectFrame;
       }
     }
   }
@@ -961,30 +1138,49 @@ function changeBpm()
 
 function playSound()
 {
-/*
-with(new AudioContext)
-    with(G=createGain())
-    for(i in D=[Math.floor(Math.random() * 15 + 5)])
-    with(createOscillator())
-    if(D[i])
-    connect(G),
-    G.connect(destination),
-    start(i*1/((game.bpm*4)/60)),
-    frequency.setValueAtTime(440*1.06**(13-D[i]),i*1/((game.bpm*4)/60)),
-    gain.setValueAtTime(1,i*1/((game.bpm*4)/60)),
-    gain.setTargetAtTime(.0001,i*1/((game.bpm*4)/60)+.23,.005),
-    stop(i*1/((game.bpm*4)/60)+.24);
-    */
+    a=(notes,center,duration,decaystart,decayduration,interval,volume,waveform,i)=>{
+      with(A=new AudioContext)
+        with(G=createGain())
+          for(i of notes){
+            with(O=createOscillator()){
+              connect(G),
+              G.connect(destination),
+              start(i[0]*interval),
+              frequency.setValueAtTime(center*1.06**(13-i[1]),i[0]*interval),
+              type=waveform,
+              gain.setValueAtTime(volume,i[0]*interval),
+              gain.setTargetAtTime(1e-5,i[0]*interval+decaystart,decayduration),
+              stop(i[0]*interval+duration);
+            }
+         }
+    }
+    a([[0,Math.floor(Math.random()*12)],[0,Math.floor(Math.random()*12)+12]],400,.5,.5,.03,1,.05,'');
+  
 }
 
-function saveProgress()
+function saveProgress(index)
 {
-  localStorage.setItem("lastname", "Smith");
+  let progress2 = JSON.parse(localStorage.getItem("wonderwanderer3"));
+  if(Math.floor(game.points) > progress2[index])
+  {
+    progress[index] = Math.floor(game.points);
+    localStorage.setItem("wonderwanderer3", JSON.stringify(progress));
+  }
+  
 }
 
 function loadProgress()
 {
-  localStorage.getItem("lastname");
+  if(localStorage.wonderwanderer3 == undefined)
+  {
+    progress = [0,0,0,0,0];
+    localStorage.setItem("wonderwanderer3", JSON.stringify(progress));
+  }
+  else
+  {
+    progress = JSON.parse(localStorage.getItem("wonderwanderer3"));
+
+  }
 }
 
 document.onmousedown = function(e)
@@ -997,10 +1193,10 @@ switch(game.level)
   case 0:
   case 1:
   case 11:
-  case 21:
-  case 31:
-  case 41:
-  case 51:
+  case 22:
+  case 33:
+  case 44:
+  case 55:
   case 52:
     clickMenuButtons(cursorX, cursorY);
     break;
@@ -1034,10 +1230,10 @@ switch(game.level)
   case 0:
   case 1:
   case 11:
-  case 21:
-  case 31:
-  case 41:
-  case 51:
+  case 22:
+  case 33:
+  case 44:
+  case 55:
     clickMenuButtons(cursorX, cursorY);
     break;
   case 10:
