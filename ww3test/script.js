@@ -671,7 +671,14 @@ function upload()
 
 function drawMenu()
 {
-  ctx.fillStyle = "#1d0530";
+  if(document.monetization && document.monetization.state === 'started')
+      {
+        ctx.fillStyle = "#1d0530";
+      }
+  else
+  {
+    ctx.fillStyle = "black";
+  }
   ctx.fillRect(0,0,canvas.width,canvas.height);
   move_starfield();
   ctx.fillStyle = "#471e22";
@@ -850,11 +857,7 @@ function drawMenuButtons()
     case 0:
       ctx.arc(canvas.width/2, canvas.height/5*4, canvas.width/8, 0, 2 * Math.PI);
       ctx.fillText("PLAY", canvas.width/2,canvas.height/5*4.05);
-      if(document.monetization && document.monetization.state === 'started')
-      {
-        ctx.arc(canvas.width/2, canvas.height/5*3, canvas.width/8, 0, 2 * Math.PI);
-        ctx.fillText("COIL", canvas.width/2,canvas.height/5*4.05);
-      }
+      
       break;
     case 1:
     case 52:
