@@ -850,7 +850,7 @@ function drawMenuButtons()
     case 0:
       ctx.arc(canvas.width/2, canvas.height/5*4, canvas.width/8, 0, 2 * Math.PI);
       ctx.fillText("PLAY", canvas.width/2,canvas.height/5*4.05);
-      if(document.monetization && document.monetization.start)
+      if(document.monetization && document.monetization.state === 'started')
       {
         ctx.arc(canvas.width/2, canvas.height/5*3, canvas.width/8, 0, 2 * Math.PI);
         ctx.fillText("COIL", canvas.width/2,canvas.height/5*4.05);
