@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="it">
+  <head>
+
+      <meta charset="utf-8">
+      <title>MPiùagency</title>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="Description" content="Siamo un'agenzia di comunicazione a Casale Monferrato, creiamo brand awareness per aziende, dalla corporate identity al web marketing.">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="keywords" content="mpiuagency, graphic, design, brand, socialmediastrategy, marketing, facebook, instagram, canali, linkedi, socialplanning, aziende, web, exhibition, socialnetwork, pianoeditoriale, socialmedia, campagne, inboundmarketing, performancemarketing, corporteidentity, logo, immaginecoordinata, naming, pubblicità, facebookmarketing" />
+      <meta name="distribution" content="global" />
+      <meta name="robots" content="index,follow" />
+      <meta name="rating" content="general" />
+      <meta name='mobile-web-app-capable' content='yes'>
+      <meta name='apple-mobile-web-app-capable' content='yes'>
+      <meta name='application-name' content='MPiuagency'>
+      <meta name='apple-mobile-web-app-status-bar-style' content='black'>
+      <meta name='apple-mobile-web-app-title' content='MPiùagency'>
+      <meta name='msapplication-TileImage' content='/images/touch/android-launchericon-144-144.png'>
+      <meta name='msapplication-TileColor' content='#A0C3AF'>
+      <meta name='theme-color' content='#A0C3AF'>
+
+      <meta property="og:title" content="MPiùagency" />
+      <meta property="og:description" content="Siamo un'agenzia di comunicazione a Casale Monferrato, creiamo brand awareness per aziende, dalla corporate identity al web marketing." />
+      <meta property="og:image" content="https://lucid-shaw-fb5824.netlify.app/images/touch/android-launchericon-192-192.png" />
+      <meta property='og:type' content='website'>
+      <meta property='og:url' content='https://lucid-shaw-fb5824.netlify.app/'>
+
+      <link rel='canonical' href='https://lucid-shaw-fb5824.netlify.app/'>
+      <link rel='manifest' href='manifest.json'>
+      <link rel="manifest" href="manifest.webmanifest">
+      <link rel='icon' sizes='192x192' href='/images/touch/android-launchericon-192-192.png'>
+      <link rel='apple-touch-icon'  href='/images/touch/android-launchericon-192-192.png'>
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel='stylesheet' href='styles/index.css'>
+      <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+      <meta http-equiv='origin-trial' content='AoSmmU3xCcjOI6/9ixevLMwZJ6JQf+SEY0pIJPkw720gFR8VtDejaYmdkg9JX/sow51jBNeuoxzPlFg35jaMyQcAAABQeyJvcmlnaW4iOiJodHRwczovL2Fpcmhvcm5lci5jb206NDQzIiwiZmVhdHVyZSI6IkJhZGdpbmdWMiIsImV4cGlyeSI6MTYwMDIxNDM5OX0='>
+      
+      <script src='scripts/pwacompat.min.js' async></script>
+
+  </head>
+  <body>
+
+      <div id="particles-js"></div>
+      
+      <div id="parent">
+          <div id="child">
+            <div id="center-all-browsers">
+              <div id="left-pink-circle"></div>
+              <div id="right-pink-circle"></div>
+              
+              <img class="img-size" src="logo.png" alt="logo" />
+              <p class="imposta_testo descrizione_agenzia">COMING SOON!</p>
+              <svg id="main_line" width="300" height="5">
+                  <line x1="0" y1="0" y2="0" x2="300" style="stroke:#000; stroke-width:5"></line>
+              </svg>
+            </div> 
+          </div>
+      </div>
+      <div id="center_svg">
+        <img src="traliccio.svg" id="traliccio" alt="">
+      </div>
+      
+    <script src="particles.min.js"></script>
+    <script src="app.js"></script>
+    <script src=/scripts/comlink.global.js></script>
+    <script>
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(registration) {
+                console.log('Service Worker Registered');
+          });
+
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+      }
+
+    </script>
+  </body>
+</html>
