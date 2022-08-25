@@ -3,9 +3,9 @@ const ctx = canvas.getContext('2d');
 
 let width = canvas.width;
 let height = canvas.height;
-const MAX_MAP_HEIGHT = 15;
-const MAX_MAP_WIDTH = 15;
-const TILE_SIZE = 32;
+const MAX_MAP_HEIGHT = 10;
+const MAX_MAP_WIDTH = 10;
+const TILE_SIZE = 48;
 
 console.log("Window Width: " + window.innerWidth);
 console.log("Window Height:" + window.innerHeight);
@@ -14,11 +14,27 @@ function resizeCanvas()
   window.devicePixelRatio=8;
   let sizeX = 480;
   let sizeY = 640;
-  let ratioX = Math.floor(window.innerWidth/sizeX);
-  let ratioY = Math.floor(window.innerHeight/sizeY);
+  let ratioX = window.innerWidth/sizeX;
+  let ratioY = window.innerHeight/sizeY;
   let ratio = Math.min(ratioX, ratioY);
-  canvas.style.width = sizeX*ratio + "px";
-  canvas.style.height = sizeY*ratio + "px";
+
+  if(window.innerWidth < sizeX)
+  {
+    canvas.style.width = window.innerWidth + "px";
+  }
+  else
+  {
+    canvas.style.width = sizeX*ratio + "px";
+  }
+
+  if(window.innerHeight < sizeY)
+  {
+    canvas.style.height = window.innerHeight + "px";
+  }
+  else
+  {
+    canvas.style.height = sizeY*ratio + "px";
+  }
   
   let scale = window.devicePixelRatio; 
   
@@ -70,11 +86,11 @@ class Platform
   }
 }
 
-let playerCharacter = new Player(50,450,20,20,TILE_SIZE,TILE_SIZE,false,0,0,5,0.8,1,0.8,11,[],false,0);
+let playerCharacter = new Player(50,450,20,20,TILE_SIZE,TILE_SIZE,false,0,0,5,0.8,1,0.8,13,[],false,0);
 
 let curLevel = 0;
 let levelMap = [];
-
+/*
 let level1 = 
 [
   1,1,21,21,21,21,21,21,21,21,21,21,21,1,1,
@@ -93,25 +109,34 @@ let level1 =
   1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ];
+*/
 
+let level1 = 
+[
+  1,1,21,21,21,21,21,21,1,1,
+  1,0,1,0,0,0,0,0,0,1,
+  1,0,0,0,0,1,0,0,0,1,
+  1,1,0,0,1,1,0,0,0,1,
+  1,0,1,0,0,0,0,0,1,1,
+  1,0,0,1,0,0,0,0,0,1,
+  1,0,0,0,1,0,0,0,0,1,
+  1,0,0,0,0,1,0,0,0,1,
+  1,0,0,0,0,0,0,1,1,1,
+  1,1,1,1,1,1,1,1,1,1,
+];
 
 let level2 = 
 [
-  1,1,20,20,20,20,20,20,20,20,20,20,20,1,1,
-  1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,1,1,0,0,0,1,0,0,1,
-  1,0,0,0,1,0,0,0,0,1,1,1,0,0,1,
-  1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,1,1,0,1,1,0,0,1,
-  1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,
-  1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,1,1,1,1,1,0,0,1,1,
-  1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,
-  1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,
-  1,0,0,1,0,0,1,1,0,1,0,0,0,0,1,
-  1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,
-  1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,
-  1,1,1,1,1,1,0,0,0,1,1,1,1,1,1
+  1,1,20,20,20,20,20,20,1,1,
+  1,0,1,0,0,0,0,0,0,1,
+  1,0,0,0,0,1,0,0,0,1,
+  1,1,0,0,1,1,0,0,0,1,
+  1,0,1,0,0,0,0,0,1,1,
+  1,0,0,1,0,0,0,0,0,1,
+  1,0,0,0,1,0,0,0,0,1,
+  1,0,0,0,0,1,0,0,0,1,
+  1,0,0,0,0,0,0,1,1,1,
+  1,1,1,1,1,1,1,1,1,1,
 ];
 
 let levelManager = 
@@ -127,8 +152,8 @@ function createMap()
     {
       if(levelManager[curLevel][(column*MAX_MAP_HEIGHT)+row] == 1)
       {
-        let hitboxWidth = 30;
-        let hitboxHeight = 30;
+        let hitboxWidth = 45;
+        let hitboxHeight = 45;
         levelMap.push(new Platform((row*TILE_SIZE)+((TILE_SIZE-hitboxWidth)/2),((height/8)+column*TILE_SIZE)+((TILE_SIZE-hitboxHeight)/2),
         hitboxWidth,hitboxHeight,TILE_SIZE,TILE_SIZE, true, true, 1));
         
@@ -196,21 +221,29 @@ function drawLevel()
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, width, height);
 
-
+  base_image = new Image();
+  base_image.src = 'Character_Game16.png';
   ctx.fillStyle = 'blue';
   ctx.fillRect(0, 0, width, height/8);
   ctx.fillStyle = 'green';
-  ctx.fillRect(playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
+  //ctx.fillRect(playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
+  ctx.drawImage(base_image, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight)
+  /*
   ctx.strokeStyle = 'purple';
   ctx.strokeRect(playerCharacter.x, playerCharacter.y, playerCharacter.hitboxWidth, playerCharacter.hitboxHeight);
+  */
   for(let i = 0; i<levelMap.length; i++)
   {
     if(levelMap[i].visible == true)
     {
-      ctx.fillStyle = 'red';
+      base_image = new Image();
+      base_image.src = 'Wall.png';
+      /*ctx.fillStyle = 'red';
       ctx.fillRect((levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
-      ctx.strokeStyle = "yellow";
-      ctx.strokeRect(levelMap[i].x, levelMap[i].y, levelMap[i].hitboxWidth, levelMap[i].hitboxHeight);
+      */
+      ctx.drawImage(base_image,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight)
+      /*ctx.strokeStyle = "yellow";
+      ctx.strokeRect(levelMap[i].x, levelMap[i].y, levelMap[i].hitboxWidth, levelMap[i].hitboxHeight);*/
     }
   }
   
