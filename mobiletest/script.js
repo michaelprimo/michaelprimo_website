@@ -6,6 +6,8 @@ let height = canvas.height;
 const MAX_MAP_HEIGHT = 10;
 const MAX_MAP_WIDTH = 10;
 const TILE_SIZE = 48;
+const SPRITE_SIZE = 16;
+const cycleLoop = [0,1,2];
 
 console.log("Window Width: " + window.innerWidth);
 console.log("Window Height:" + window.innerHeight);
@@ -48,7 +50,7 @@ function resizeCanvas()
 resizeCanvas();
 class Player 
 {
-  constructor(x, y, hitboxWidth, hitboxHeight, drawWidth, drawHeight, grounded, speedX, speedY, maxSpeed, gravity, acceleration, friction, jumpPower, keys, collided, collision_ID)
+  constructor(x, y, hitboxWidth, hitboxHeight, drawWidth, drawHeight, grounded, speedX, speedY, maxSpeed, gravity, acceleration, friction, jumpPower, keys, collided, collision_ID, idleMovement, curFrame, delayFrame, maxDelayFrame)
   {
     this.x = x;
     this.y = y;
@@ -67,6 +69,10 @@ class Player
     this.keys = keys;
     this.collided = collided;
     this.collision_ID = collision_ID;
+    this.idleMovement = idleMovement;
+    this.curFrame = curFrame;
+    this.delayFrame = delayFrame;
+    this.maxDelayFrame = maxDelayFrame;
   }
 }
 
@@ -86,10 +92,18 @@ class Platform
   }
 }
 
-let playerCharacter = new Player(50,450,20,20,TILE_SIZE,TILE_SIZE,false,0,0,5,0.8,1,0.8,13,[],false,0);
+let playerCharacter = new Player(50,450,34,34,TILE_SIZE,TILE_SIZE,false,0,0,5,0.9,1,0.8,14,[],false,0,[0,1,2,1,0],0,0,10);
 
 let curLevel = 0;
 let levelMap = [];
+
+let musicFrame = 0;
+function music()
+{
+  a([[0,12],[1,12],[2,12],[2,10]],500,.139,.58,.725,.2,.1,'triangle');
+  a([[0,7],[1,6],[2,6]],400,.19,.18,.005,.2,.1,'');
+}
+
 /*
 let level1 = 
 [
@@ -119,8 +133,8 @@ let level1 =
   1,1,0,0,1,1,0,0,0,1,
   1,0,1,0,0,0,0,0,1,1,
   1,0,0,1,0,0,0,0,0,1,
-  1,0,0,0,1,0,0,0,0,1,
-  1,0,0,0,0,1,0,0,0,1,
+  1,0,1,0,1,0,0,0,0,1,
+  1,0,0,1,0,1,0,0,0,1,
   1,0,0,0,0,0,0,1,1,1,
   1,1,1,1,1,1,1,1,1,1,
 ];
@@ -130,7 +144,7 @@ let level2 =
   1,1,20,20,20,20,20,20,1,1,
   1,0,1,0,0,0,0,0,0,1,
   1,0,0,0,0,1,0,0,0,1,
-  1,1,0,0,1,1,0,0,0,1,
+  1,1,0,0,1,0,0,0,0,1,
   1,0,1,0,0,0,0,0,1,1,
   1,0,0,1,0,0,0,0,0,1,
   1,0,0,0,1,0,0,0,0,1,
@@ -197,6 +211,14 @@ function moveCharacter()
 // UPLOAD LOOP
 function upload()
 {
+  /*
+  musicFrame++;
+  if(musicFrame >= 180)
+  {
+    music();
+    musicFrame = 0;
+  }
+  */
   check_playerCollision();
   drawLevel();
   moveCharacter();
@@ -222,12 +244,32 @@ function drawLevel()
   ctx.fillRect(0, 0, width, height);
 
   base_image = new Image();
-  base_image.src = 'Character_Game16.png';
+  base_image.src = 'Character_Game.png';
   ctx.fillStyle = 'blue';
   ctx.fillRect(0, 0, width, height/8);
   ctx.fillStyle = 'green';
-  //ctx.fillRect(playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
-  ctx.drawImage(base_image, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight)
+ 
+  
+  
+  //ctx.drawImage(base_image, 0, 0, 0, 0, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight)
+  ctx.drawImage(base_image, playerCharacter.idleMovement[playerCharacter.curFrame]*SPRITE_SIZE, 0, 16, 16, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
+  if(playerCharacter.delayFrame >= playerCharacter.maxDelayFrame)
+  {
+    if(playerCharacter.curFrame > playerCharacter.idleMovement.length-2)
+    {
+      playerCharacter.curFrame = 0;
+    }
+    else
+    {
+      playerCharacter.curFrame++;
+    }
+    playerCharacter.delayFrame = 0;
+  }
+  else
+  {
+    playerCharacter.delayFrame++;
+  }
+  
   /*
   ctx.strokeStyle = 'purple';
   ctx.strokeRect(playerCharacter.x, playerCharacter.y, playerCharacter.hitboxWidth, playerCharacter.hitboxHeight);
@@ -241,7 +283,8 @@ function drawLevel()
       /*ctx.fillStyle = 'red';
       ctx.fillRect((levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
       */
-      ctx.drawImage(base_image,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight)
+      ctx.drawImage(base_image,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
+      
       /*ctx.strokeStyle = "yellow";
       ctx.strokeRect(levelMap[i].x, levelMap[i].y, levelMap[i].hitboxWidth, levelMap[i].hitboxHeight);*/
     }
@@ -397,3 +440,25 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
   playerCharacter.keys[e.keyCode] = false;
 });
+
+a=(notes,center,duration,decaystart,decayduration,interval,volume,waveform,i)=>{
+  with(A=new AudioContext)
+    with(G=createGain())
+      for(i of notes){
+        with(O=createOscillator()){
+          connect(G),
+          G.connect(destination),
+          start(i[0]*interval),
+          frequency.setValueAtTime(center*1.06**(13-i[1]),i[0]*interval),
+          type=waveform,
+          gain.setValueAtTime(volume,i[0]*interval),
+          gain.setTargetAtTime(1e-5,i[0]*interval+decaystart,decayduration),
+          stop(i[0]*interval+duration);
+          
+        }
+     }
+}
+
+  
+
+
