@@ -9,7 +9,43 @@ const TILE_SIZE = 32;
 const SPRITE_SIZE = 16;
 base_image = new Image();
 base_image.src = 'sprite.png';
+function resizeCanvas()
+{
+  window.devicePixelRatio=2;
+  let sizeX = 480;
+  let sizeY = 640;
+  let ratioX = window.innerWidth/sizeX;
+  let ratioY = window.innerHeight/sizeY;
+  let ratio = Math.min(ratioX, ratioY);
 
+  if(window.innerWidth < sizeX)
+  {
+    canvas.style.width = window.innerWidth + "px";
+  }
+  else
+  {
+    canvas.style.width = sizeX*ratio + "px";
+  }
+
+  if(window.innerHeight < sizeY)
+  {
+    canvas.style.height = window.innerHeight + "px";
+  }
+  else
+  {
+    canvas.style.height = sizeY*ratio + "px";
+  }
+  
+  let scale = window.devicePixelRatio; 
+  
+  canvas.width = Math.floor(sizeX * scale);
+  canvas.height = Math.floor(sizeY * scale);
+  
+  ctx.scale(scale, scale);
+  
+}
+
+resizeCanvas();
 class Player 
 {
   constructor(x, y, hitboxWidth, hitboxHeight, drawWidth, drawHeight, grounded, speedX, speedY, maxSpeed, gravity, acceleration, friction, jumpPower, keys, collided, collision_ID, idleMovement, curFrame, delayFrame, maxDelayFrame)
