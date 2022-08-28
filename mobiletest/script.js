@@ -6,11 +6,13 @@ let height = canvas.height;
 const MAX_MAP_HEIGHT = 15;
 const MAX_MAP_WIDTH = 15;
 const TILE_SIZE = 32;
-
+const SPRITE_SIZE = 16;
+base_image = new Image();
+base_image.src = 'sprite.png';
 
 class Player 
 {
-  constructor(x, y, hitboxWidth, hitboxHeight, drawWidth, drawHeight, grounded, speedX, speedY, maxSpeed, gravity, acceleration, friction, jumpPower, keys, collided, collision_ID)
+  constructor(x, y, hitboxWidth, hitboxHeight, drawWidth, drawHeight, grounded, speedX, speedY, maxSpeed, gravity, acceleration, friction, jumpPower, keys, collided, collision_ID, idleMovement, curFrame, delayFrame, maxDelayFrame)
   {
     this.x = x;
     this.y = y;
@@ -29,6 +31,22 @@ class Player
     this.keys = keys;
     this.collided = collided;
     this.collision_ID = collision_ID;
+    this.idleMovement = idleMovement;
+    this.curFrame = curFrame;
+    this.delayFrame = delayFrame;
+    this.maxDelayFrame = maxDelayFrame;
+    this.curCapFrame = 0;
+    this.isGliding = false;
+    this.topCapFrame = 60;
+    this.downCapFrame = 30;
+    this.gravityDirection = "normal";
+    this.oldGravity = gravity;
+    this.cameraY = y;
+    this.death = function()
+    {
+      playerCharacter.x = 50;
+      playerCharacter.y = 450;
+    }
   }
 }
 
@@ -48,8 +66,8 @@ class Platform
   }
 }
 
-let playerCharacter = new Player(50,450,20,20,TILE_SIZE,TILE_SIZE,false,0,0,5,0.8,1,0.8,11,[],false,0);
 
+let playerCharacter = new Player(50,450,22,22,TILE_SIZE,TILE_SIZE,false,0,0,5,1,1,0.8,12,[],false,0,[0,1,2,1,0],0,0,10,0,180);
 let curLevel = 0;
 let levelMap = [];
 
@@ -105,8 +123,8 @@ function createMap()
     {
       if(levelManager[curLevel][(column*MAX_MAP_HEIGHT)+row] == 1)
       {
-        let hitboxWidth = 30;
-        let hitboxHeight = 30;
+        let hitboxWidth = 28;
+        let hitboxHeight = 28;
         levelMap.push(new Platform((row*TILE_SIZE)+((TILE_SIZE-hitboxWidth)/2),((height/8)+column*TILE_SIZE)+((TILE_SIZE-hitboxHeight)/2),
         hitboxWidth,hitboxHeight,TILE_SIZE,TILE_SIZE, true, true, 1));
         
@@ -169,18 +187,26 @@ function drawLevel()
 
   ctx.fillStyle = 'blue';
   ctx.fillRect(0, 0, width, height/8);
+  /*
   ctx.fillStyle = 'green';
   ctx.fillRect(playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
   ctx.strokeStyle = 'purple';
   ctx.strokeRect(playerCharacter.x, playerCharacter.y, playerCharacter.hitboxWidth, playerCharacter.hitboxHeight);
+  */
+  ctx.drawImage(base_image, (playerCharacter.idleMovement[playerCharacter.curFrame]*SPRITE_SIZE)-1, 0, 16, 16, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
+
   for(let i = 0; i<levelMap.length; i++)
   {
     if(levelMap[i].visible == true)
     {
+      /*
       ctx.fillStyle = 'red';
       ctx.fillRect((levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
       ctx.strokeStyle = "yellow";
       ctx.strokeRect(levelMap[i].x, levelMap[i].y, levelMap[i].hitboxWidth, levelMap[i].hitboxHeight);
+      */
+      ctx.drawImage(base_image, 3*SPRITE_SIZE, 0, 16, 16,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
+
     }
   }
   
