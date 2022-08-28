@@ -103,7 +103,7 @@ class Platform
 }
 
 
-let playerCharacter = new Player(50,450,22,22,TILE_SIZE,TILE_SIZE,false,0,0,5,1,1,0.8,12,[],false,0,[0,1,2,1,0],0,0,10,0,180);
+let playerCharacter = new Player(50,450,22,22,TILE_SIZE,TILE_SIZE,false,0,0,5,1,1,0.8,24,[],false,0,[0,1,2,1,0],0,0,10,0,180);
 let curLevel = 0;
 let levelMap = [];
 
