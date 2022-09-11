@@ -83,11 +83,23 @@ function drawLevel()
   ctx.fillStyle='#F0F0EB';
   ctx.font = "20px Tahoma";
   ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
+  ctx.textBaseline = 'middle';
   if(scene_manager.curLevel == 0 && scene_manager.isLevel == true)
   {
     ctx.fillText("Click and hold to the side of the screen", width/2, 575);
     ctx.fillText("where you want to move your character.", width/2, 605);
+  }
+
+  if(scene_manager.curLevel == 1 && scene_manager.isLevel == true)
+  {
+    ctx.fillText("Failure is progress here.", width/2, 575);
+    ctx.fillText("Touching spikes makes you glide or bounce.", width/2, 605);
+  }
+
+  if(scene_manager.curLevel == 2 && scene_manager.isLevel == true)
+  {
+    ctx.fillText("Nice blue blocks, unfortunately...", width/2, 575);
+    ctx.fillText("...they are shy from who bounce around.", width/2, 605);
   }
   
   //ctx.fillText("Next Level:" + scene_manager.nextLevel, 100, 110);
