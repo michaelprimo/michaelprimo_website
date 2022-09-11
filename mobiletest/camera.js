@@ -11,7 +11,13 @@ class Camera
 
 function checkCamera()
 {
-  //camera.y--;
+  camera.y += 0.3;
+  /*
+  if(playerCharacter.y < camera.y+height)
+  {
+    playerCharacter.death();
+  }
+  */
   /*
   if(playerCharacter.isGliding == true)
   {

@@ -84,22 +84,53 @@ function drawLevel()
   ctx.font = "20px Tahoma";
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+    ctx.lineWidth = "1";
+          
+    // Set the path color
+    ctx.strokeStyle = "#7BE098";
+      
+    ctx.moveTo(90, 550);
+    ctx.lineTo(10, 590);
+    ctx.lineTo(90, 630);
+    ctx.lineTo(90, 550);
+    ctx.moveTo(390, 550);
+    ctx.lineTo(470, 590);
+    ctx.lineTo(390, 630);
+    ctx.lineTo(390, 550);
+    ctx.stroke();
   if(scene_manager.curLevel == 0 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Click and hold to the side of the screen", width/2, 575);
-    ctx.fillText("where you want to move your character.", width/2, 605);
+    ctx.fillText("Click and hold the side of the", width/2, 575);
+    ctx.fillText("screen where you want to move.", width/2, 605);
+    
+    
+     
   }
 
   if(scene_manager.curLevel == 1 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Failure is progress here.", width/2, 575);
-    ctx.fillText("Touching spikes makes you glide or bounce.", width/2, 605);
+    ctx.fillText("Touch the spikes for gliding.", width/2, 575);
+    ctx.fillText("Touch them again for bouncing.", width/2, 605);
   }
 
   if(scene_manager.curLevel == 2 && scene_manager.isLevel == true)
   {
     ctx.fillText("Nice blue blocks, unfortunately...", width/2, 575);
-    ctx.fillText("...they are shy from who bounce around.", width/2, 605);
+    ctx.fillText("...they appears only for who fly.", width/2, 605);
+  }
+
+  if(scene_manager.curLevel == 3 && scene_manager.isLevel == true)
+  {
+    ctx.fillText("Nice green blocks, unfortunately...", width/2, 575);
+    ctx.fillText("...they appears only for who bounce.", width/2, 605);
+  }
+
+  if(scene_manager.curLevel == 4 && scene_manager.isLevel == true)
+  {
+    ctx.fillText("Last level of the game!", width/2, 575);
+    ctx.fillText("Show them what you got!", width/2, 605);
   }
   
   //ctx.fillText("Next Level:" + scene_manager.nextLevel, 100, 110);

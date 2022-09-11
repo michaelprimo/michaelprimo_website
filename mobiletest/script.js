@@ -15,7 +15,11 @@ function upload()
       scene_manager.stop_waitFrames = true;
     }
     check_playerCollision();
-    checkCamera();
+    if(scene_manager.curLevel == 5)
+    {
+      checkCamera();
+    }
+    
     drawLevel();
     if(scene_manager.stop_waitFrames == true)
     {
@@ -47,9 +51,9 @@ function upload()
         ctx.fillRect(0, 0, width, height);
         ctx.fillStyle = "yellow";
         ctx.font = "25px Tahoma";
-        ctx.fillText("Awaken, fellow one.", 90, 110);
-        ctx.fillText("You are reborn in a " + die_roll_message + " world.", 10, 170);
-        
+        ctx.fillText("Awaken, fellow one.", width/2, 110);
+        ctx.fillText("You are reborn in a " + die_roll_message + " world.", width/2, 170);
+        ctx.fillText(die_roll_description, width/2, 230);
       }
       else
       {
