@@ -29,6 +29,7 @@ class Player
     this.keys = keys;
     this.collided = collided;
     this.collision_type_id = collision_type_id;
+    this.collision_type_id = 0;
     this.idleMovement = idleMovement;
     this.curFrame = curFrame;
     this.delayFrame = delayFrame;
@@ -38,13 +39,18 @@ class Player
     this.cameraY = y;
     this.spawnX = 150;
     this.spawnY = 350;
-    this.checkpoint_id = 0;
+    this.checkpoint_last_id = [false,false,false];
+    this.checkpoint_grabbed = 0;
     this.movementFrameCount = 0;
     this.direction = 90;
     this.death = function()
     {
+      playerCharacter.speedX = 0;
+      playerCharacter.speedY = 0;
       playerCharacter.direction = 360;
       on_a_roll(); 
+      scene_manager.waitFrames = 0;
+      scene_manager.stop_waitFrames = false;
       if(die_roll == 2)
       {
         playerCharacter.x = width - playerCharacter.spawnX;
@@ -61,15 +67,19 @@ class Player
       {
         playerCharacter.gravity = playerCharacter.oldGravity;
         playerCharacter.acceleration = playerCharacter.oldAcceleration*2;
+        playerCharacter.idleMovement = [0,1,2,1];
       }
       else
       {
-        playerCharacter.gravity = playerCharacter.oldGravity*3;
+        playerCharacter.gravity = playerCharacter.oldGravity*3.5;
         playerCharacter.acceleration = playerCharacter.oldAcceleration/2;
+        playerCharacter.idleMovement = [3,4,5,4];
       }
       
       die_mode_level();
       playerCharacter.enemies_movement();
+      scene_manager.curScene = 1;
+      scene_manager.isLevel = false;
       //console.clear();
      // console.log("Death happened.");
       
@@ -116,8 +126,7 @@ class Player
     }
     this.check_playerGravity = function()
     {
-      if(die_roll != 5)
-      {
+      
         if(playerCharacter.speedY >= playerCharacter.gravity)
         {
           playerCharacter.speedY = playerCharacter.gravity;
@@ -133,23 +142,67 @@ class Player
         playerCharacter.x += playerCharacter.speedX;
         playerCharacter.y += playerCharacter.speedY;
         //console.log("91: speedY moving the character because of the gravity" + playerCharacter.speedY);
-      }
-      if(die_roll == 5)
-      {
-        playerCharacter.movementFrameCount++;
-      }
+      
       
     }
           
     this.enemies_movement = function()
     {
-      
-      levelMap.forEach((number, index, array) => {
+      levelMap.forEach((number, index, array) => 
+      {
+        if((levelMap[index].type_id == 9) || (levelMap[index].type_id == 11))
+        {
+          levelMap[index].solid = false;
+        }
+        if((levelMap[index].type_id == 9 && playerCharacter.isBouncing == true))
+        {
+          levelMap[index].type_id = 10;
+          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+3,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
+          levelMap[index].solid = true;
+        }
+        if((levelMap[index].type_id == 11 && playerCharacter.isBouncing == false))
+        {
+          levelMap[index].type_id = 12;
+          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+3,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
+          levelMap[index].solid = true;
+        }
+        if((levelMap[index].type_id == 10 && playerCharacter.isBouncing == false))
+        {
+          levelMap[index].type_id = 9;
+          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+3,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
+          levelMap[index].solid = true;
+        }
+        if((levelMap[index].type_id == 12 && playerCharacter.isBouncing == true))
+        {
+          levelMap[index].type_id = 11;
+          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+3,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
+          levelMap[index].solid = true;
+        }
         
+        
+
+        if(levelMap[index].type_id == 17 && scene_manager.nextLevel == true)
+        {
+          levelMap[index].type_id = 16;
+          levelMap[index].solid = false;
+          let frame_id = (levelMap[index].type_id*3)+3;
+          levelMap[index].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
+          
+        }
+        
+/*
+        if((levelMap[index].type_id == 13 && playerCharacter.checkpoint_id[playerCharacter.checkpoint_id-1] == 13))
+        {
+          
+          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+9,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
+          levelMap[index].solid = true;
+        }
+        */
+        /*
         if((levelMap[index].type_id == 3 && playerCharacter.isBouncing == false) || (levelMap[index].type_id == 4 && playerCharacter.isBouncing == true))
         {
           levelMap[index].solid = false;
-          levelMap[index].visible = false; 
+          levelMap[index].visible = true; 
          
         }
         if((levelMap[index].type_id == 3 && playerCharacter.isBouncing == true) || (levelMap[index].type_id == 4 && playerCharacter.isBouncing == false))
@@ -157,12 +210,12 @@ class Player
           levelMap[index].solid = true;
           levelMap[index].visible = true; 
         }
-        if((levelMap[index].type_id == 23 && die_roll == 4))
+        if((levelMap[index].type_id == 123 && die_roll == 4))
         {
           levelMap[index].solid = false;
           levelMap[index].visible = false;
         }
-        if((levelMap[index].type_id == 13 && die_roll == 3))
+        if((levelMap[index].type_id == 113 && die_roll == 3))
         {
           let d100_roll = Math.floor(Math.random() * 100) + 1;
           if(d100_roll < 50)
@@ -177,6 +230,7 @@ class Player
           levelMap[index].solid = false;
           levelMap[index].visible = false;
         }
+        */
       });
     }
     
@@ -184,14 +238,16 @@ class Player
 }
 
 
+let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,5,1,2,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
+let mobileControl = new mobileControls();
+
+document.addEventListener("touchstart", touchHandler);
+document.addEventListener("touchend", end_touchHandler);
 
 // CREATE CHARACTER
 function moveCharacter() 
 { 
-  if(die_roll == 5)
-  {
-    playerCharacter.y += 1;
-  }
+  
   /*
   else if(playerCharacter.isBouncing == false && die_roll == 5)
   {
@@ -217,82 +273,23 @@ function moveCharacter()
   if (playerCharacter.keys[39] || (mobileControl.buttonPressed == "left" && mobileControl.mouseIsDown == true)) 
   {
       // right arrow
-      if(die_roll != 5)
-      {
+      
         if (playerCharacter.speedX < playerCharacter.maxSpeed) 
         {
           playerCharacter.speedX += playerCharacter.acceleration;
         }
-      }
-      else
-      {
-        if(die_roll == 5)
-        {
-          playerCharacter.x += 2;
-          playerCharacter.y -= 2;
-        }
-        /*
-        else
-        {
-          if(playerCharacter.movementFrameCount > TILE_SIZE/2)
-          {
-            switch(playerCharacter.direction)
-            {
-              case 90:
-              case 180:
-              case 270:
-                playerCharacter.direction += 90;
-                break;
-              case 360:
-                playerCharacter.direction = 90;
-                break;
-            }
-            playerCharacter.movementFrameCount = 0;
-          }
-        }
-         */ 
-      }
+      
+     
   }
   if (playerCharacter.keys[37] || (mobileControl.buttonPressed == "right" && mobileControl.mouseIsDown == true)) 
   {
       // left arrow
-      if(die_roll != 5)
-      {
+      
       if (playerCharacter.speedX > -playerCharacter.maxSpeed) 
       {
         playerCharacter.speedX -= playerCharacter.acceleration;
       }
-      }
-      else
-      {
-        if(die_roll == 5)
-        {
-          playerCharacter.x -= 2;
-          playerCharacter.y -= 2;
-        }
-        /*
-        else
-        {
-          if(playerCharacter.movementFrameCount > TILE_SIZE/2)
-          {
-            switch(playerCharacter.direction)
-            {
-              case 90:
-                playerCharacter.direction = 360;
-                break;
-              case 180:
-              case 270:
-              case 360:
-                playerCharacter.direction -= 90;
-                break;
-             
-               
-            }
-            playerCharacter.movementFrameCount = 0;
-          }
-        }
-        */
-      }
+      
   } 
 }
 
@@ -314,31 +311,66 @@ function check_playerCollision()
     if(dir != undefined)
     {
       playerCharacter.collision_type_id = levelMap[i].type_id;
+      playerCharacter.collision_id = i;
     }
 
-    if(playerCharacter.collision_type_id === 2 || (playerCharacter.collision_type_id === 23 && levelMap[i].type_id == 23 && levelMap[i].solid == true))
+    if(playerCharacter.collision_type_id === 8 && levelMap[i].visible === true && levelMap[i].type_id === 8)
     {
       //console.log(levelMap[i]);
       playerCharacter.death();
     }
+   
 
-    if((playerCharacter.collision_type_id === 61 && levelMap[i].type_id === 61 && levelMap[i].solid == true) || (playerCharacter.collision_type_id === 62 && levelMap[i].type_id === 62 && levelMap[i].solid == true))
+    if((levelMap[i].type_id == 1+scene_manager.curLevel && die_roll == 6 && playerCharacter.collision_type_id == 1+scene_manager.curLevel && playerCharacter.collision_id == i && playerCharacter.grounded == true))
     {
-      if(die_roll == 2)
+      let frame_id = (Math.floor(Math.random() * 18 + 1)*3)+3;
+      levelMap[i].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
+
+    }
+
+    for(j = 0; j < 3; j++)
+    {
+      if((playerCharacter.collision_type_id === 13+j && levelMap[i].type_id === 13+j && playerCharacter.checkpoint_last_id[j] == false))
       {
-        playerCharacter.spawnX = width-levelMap[i].x;
+        if(die_roll == 2)
+        {
+          playerCharacter.spawnX = width-levelMap[i].x;
+        }
+        else
+        {
+          playerCharacter.spawnX = levelMap[i].x;
+        }
+        playerCharacter.spawnY = levelMap[i].y;
+        levelMap[i].solid = false;
+        
+        //playerCharacter.collision_type_id = 0;
+        playerCharacter.checkpoint_last_id[j] = true;
+        levelMap[i].grabbed = true;
+        
+        let frame_id = (levelMap[i].type_id*3)+3*(16-levelMap[i].type_id);
+        levelMap[i].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
+        if(playerCharacter.checkpoint_last_id[0] == true && playerCharacter.checkpoint_last_id[1] == true && playerCharacter.checkpoint_last_id[2] == true && playerCharacter.checkpoint_last_id[2] == true)
+        {
+          scene_manager.nextLevel = true;
+          playerCharacter.enemies_movement();
+        }
+        
       }
-      else
-      {
-        playerCharacter.spawnX = levelMap[i].x;
-      }
-      playerCharacter.spawnY = levelMap[i].y;
-      levelMap[i].solid = false;
-      levelMap[i].visible = false;
-      //playerCharacter.collision_type_id = 0;
-      playerCharacter.checkpoint_id++;
-      playerCharacter.death();
-      
+    }
+    
+    if(playerCharacter.collision_type_id === 16 && scene_manager.nextLevel == true)
+    {
+     scene_manager.curScene = 1;
+     scene_manager.curLevel++;
+     for(let j = 0; j<playerCharacter.checkpoint_last_id.length;j++)
+     {
+      playerCharacter.checkpoint_last_id[j] = false;
+     }
+     playerCharacter.spawnX = levelManager[scene_manager.curLevel].player_spawnX;
+     playerCharacter.spawnY = levelManager[scene_manager.curLevel].player_spawnY;
+     scene_manager.nextLevel = false;
+     scene_manager.isLevel = false;
+     levelStart();
     }
 
     if (dir === "l" || dir === "r") 
@@ -390,11 +422,6 @@ document.body.addEventListener("keyup", function(e) {
 })
 
 
-let playerCharacter = new Player(250,250,22,22,TILE_SIZE,TILE_SIZE,false,0,0,5,1,2,0.8,12,[],false,0,[0,1,2,1,0],0,0,10,0,180);
-let mobileControl = new mobileControls();
-
-document.addEventListener("touchstart", touchHandler);
-document.addEventListener("touchend", end_touchHandler);
 
 function touchHandler(e) 
 {
@@ -416,6 +443,7 @@ function touchHandler(e)
       }
     e.preventDefault();
   }
+
 }
 
 function end_touchHandler(e) 
@@ -442,6 +470,7 @@ canvas.onmousedown = function(e)
       mobileControl.buttonPressed = "right";
     }
   
+ scene_manager.isLevel = true;
 }
 canvas.onmouseup = function(e){
     if(mobileControl.mouseIsDown)
@@ -449,6 +478,7 @@ canvas.onmouseup = function(e){
       mobileControl.mouseIsDown = false;
       mobileControl.buttonPressed = "";
       mouseClick(e);
+      
     } 
 }
 

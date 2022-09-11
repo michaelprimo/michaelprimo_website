@@ -11,6 +11,7 @@ class Camera
 
 function checkCamera()
 {
+  //camera.y--;
   /*
   if(playerCharacter.isGliding == true)
   {
