@@ -11,4 +11,4 @@ class Scene
     }
 }
 
-let scene_manager = new Scene(3,0);
+let scene_manager = new Scene(0,0);

@@ -91,6 +91,7 @@ class Player
       // Player is on air and they aren't touching anything.
       if(playerCharacter.grounded != true)
       {
+        
         //if player is in "gliding" mode...
         if(playerCharacter.isBouncing === false)
         {
@@ -102,6 +103,7 @@ class Player
       //if you are touching a platform, however...
       else
       {
+        
        //...this happens in "bouncing mode".
        if(playerCharacter.isBouncing === true)
        {
@@ -240,10 +242,10 @@ class Player
 
 let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,5,1,2,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
 let mobileControl = new mobileControls();
-
+/*
 document.addEventListener("touchstart", touchHandler);
 document.addEventListener("touchend", end_touchHandler);
-
+*/
 // CREATE CHARACTER
 function moveCharacter() 
 { 
@@ -422,24 +424,36 @@ document.body.addEventListener("keyup", function(e) {
 })
 
 
-
+/*
 function touchHandler(e) 
 {
   if (e.touches) 
   {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = Touch.clientX - rect.left;
+    const y = Touch.clientY - rect.top;
     mobileControl.mouseIsDown = true;
+
+    
+  ctx.fillStyle='#F0F0EB';
+  ctx.font = "20px Tahoma";
+  ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+    ctx.fillText("x: " + x, width/2, 30);
+    ctx.fillText("y: " + y, width/2, 70);
+
+
     //alert("x: " + x + " y: " + y + " width/2: " + width/2);
     
-      if(x > width/2)
+      if(y > width/2)
       {
         mobileControl.buttonPressed = "left";
+        alert(y);
       }
       else
       {
         mobileControl.buttonPressed = "right";
+        alert(y);
       }
     e.preventDefault();
   }
@@ -452,7 +466,7 @@ function end_touchHandler(e)
     mobileControl.buttonPressed = "";
 }
 
-
+*/
 canvas.onmousedown = function(e)
 {
   const rect = canvas.getBoundingClientRect();
@@ -477,8 +491,46 @@ canvas.onmouseup = function(e){
     {
       mobileControl.mouseIsDown = false;
       mobileControl.buttonPressed = "";
-      mouseClick(e);
+      //mouseClick(e);
       
     } 
 }
 
+let clientX;
+let clientY;
+
+document.addEventListener('touchstart', (e) => {
+  // Cache the client X/Y coordinates
+  clientX = e.touches[0].clientX;
+  clientY = e.touches[0].clientY;
+  mobileControl.mouseIsDown = true;
+  if(clientX < width/2)
+  {
+    mobileControl.buttonPressed = "right";
+  }
+  else
+  {
+    mobileControl.buttonPressed = "left";    
+  }
+   
+
+}, false);
+
+document.addEventListener('touchend', (e) => {
+  let deltaX;
+  let deltaY;
+  
+  // Compute the change in X and Y coordinates.
+  // The first touch point in the changedTouches
+  // list is the touch point that was just removed from the surface.
+  deltaX = e.changedTouches[0].clientX - clientX;
+  deltaY = e.changedTouches[0].clientY - clientY;
+  if(mobileControl.mouseIsDown)
+  {
+    mobileControl.mouseIsDown = false;
+    mobileControl.buttonPressed = "";
+    //mouseClick(e);
+    
+  } 
+  // Process the data…
+}, false);

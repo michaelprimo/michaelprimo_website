@@ -78,12 +78,18 @@ function drawLevel()
   {
     playerCharacter.delayFrame++;
   }
- 
-  ctx.fillStyle='red';
+  
+  
+  ctx.fillStyle='#F0F0EB';
   ctx.font = "20px Tahoma";
-  ctx.fillText("Gravity:" + playerCharacter.gravity, 100, 30);
-  //ctx.fillText("spawnX: " + (width-playerCharacter.spawnX) + " spawnY: " + (width-playerCharacter.spawnY), 0, 70);
-  //ctx.fillText("buttonPressed:" + mobileControl.buttonPressed, 100, 70);
+  ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+  if(scene_manager.curLevel == 0 && scene_manager.isLevel == true)
+  {
+    ctx.fillText("Click and hold to the side of the screen", width/2, 575);
+    ctx.fillText("where you want to move your character.", width/2, 605);
+  }
+  
   //ctx.fillText("Next Level:" + scene_manager.nextLevel, 100, 110);
   //ctx.fillText("Checkpoint ID:" + playerCharacter.checkpoint_last_id, 0, 150);
   
