@@ -39,7 +39,7 @@ function upload()
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "yellow";
-      ctx.fillText("Bye roll", 30, 110);
+      ctx.fillText("Bye roll!", 30, 110);
     }
     if(scene_manager.curScene == 1)
     {
