@@ -353,6 +353,7 @@ function check_playerCollision()
         
         let frame_id = (levelMap[i].type_id*3)+3*(16-levelMap[i].type_id);
         levelMap[i].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
+        HUDSprites[j].idleMovement=[42,43,44,43];
         levelMap[i].visible = false;
         if(playerCharacter.checkpoint_last_id[0] == true && playerCharacter.checkpoint_last_id[1] == true && playerCharacter.checkpoint_last_id[2] == true && playerCharacter.checkpoint_last_id[2] == true)
         {
@@ -516,7 +517,7 @@ document.addEventListener('touchstart', (e) => {
     mobileControl.buttonPressed = "left";    
   }
    
-  e.preventDefault();
+ 
 }, false);
 
 document.addEventListener('touchend', (e) => {
@@ -535,6 +536,6 @@ document.addEventListener('touchend', (e) => {
     //mouseClick(e);
     
   } 
-  e.preventDefault();
+  
   // Process the data…
 }, false);

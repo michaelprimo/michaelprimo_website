@@ -5,7 +5,11 @@ body
     overflow-y: hidden;
     overflow-x: hidden;
     height:100%;
-    background-color: #fcfcfc;
+    background-color: #545155;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 canvas{
