@@ -4,6 +4,11 @@ base_image.src = 'sprite.png';
 background_image = new Image();
 background_image.src = 'background.png';
 
+let skull_sprite = new SceneSprite(30, 30, 32, 32, 18, [57,58,59,58]);
+let star_sprite =  new SceneSprite(330, 30, 32, 32, 15, [48,49,50,49]);
+
+let HUDSprites = [skull_sprite, star_sprite];
+
 // DRAW LEVEL
 function drawLevel()
 {
@@ -35,7 +40,7 @@ function drawLevel()
     {
       if(levelMap[i].visible == true)
       {
-      ctx.drawImage(base_image, (levelMap[i].idleMovement[levelMap[i].curFrame]*SPRITE_SIZE), 0, 16, 16,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);
+      ctx.drawImage(base_image, (levelMap[i].idleMovement[levelMap[i].curFrame]*SPRITE_SIZE), 0, 16, 16,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);      
       }
     }
     /*
@@ -60,8 +65,29 @@ function drawLevel()
     }
   }
 
-  
+  for(let i = 0; i < HUDSprites.length; i++)
+  {
+    ctx.drawImage(base_image, (HUDSprites[i].idleMovement[HUDSprites[i].curFrame]*SPRITE_SIZE), 0, 16, 16, HUDSprites[i].x, HUDSprites[i].y, HUDSprites[i].drawWidth, HUDSprites[i].drawHeight);
+    if(HUDSprites[i].delayFrame >= HUDSprites[i].maxDelayFrame)
+    {
+      if(HUDSprites[i].curFrame > HUDSprites[i].idleMovement.length-2)
+      {
+        HUDSprites[i].curFrame = 0;
+      }
+      else
+      {
+        HUDSprites[i].curFrame++;
+      }
+      HUDSprites[i].delayFrame = 0;
+    }
+    else
+    {
+      HUDSprites[i].delayFrame++;
+    }
+  }
+
   ctx.drawImage(base_image, (playerCharacter.idleMovement[playerCharacter.curFrame]*SPRITE_SIZE)-1, 0, 16, 16, playerCharacter.x-((TILE_SIZE-playerCharacter.hitboxWidth)/2), playerCharacter.y-((TILE_SIZE-playerCharacter.hitboxHeight)/2), playerCharacter.drawWidth, playerCharacter.drawHeight);
+
   if(playerCharacter.delayFrame >= playerCharacter.maxDelayFrame)
   {
     if(playerCharacter.curFrame > playerCharacter.idleMovement.length-2)

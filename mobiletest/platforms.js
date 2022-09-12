@@ -23,3 +23,18 @@ class Platform
   }
 }
 
+class SceneSprite
+{
+  constructor(x, y, drawWidth, drawHeight, type_id, idleMovement)
+  {
+    this.x = x;
+    this.y = y;
+    this.drawWidth = drawWidth;
+    this.drawHeight = drawHeight;
+    this.type_id = type_id;
+    this.idleMovement = idleMovement;
+    this.curFrame = 0;
+    this.delayFrame = 20;
+    this.maxDelayFrame = 20; 
+  }
+}

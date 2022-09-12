@@ -240,7 +240,7 @@ class Player
 }
 
 
-let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,5,1,1,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
+let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,3,1,1,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
 let mobileControl = new mobileControls();
 /*
 document.addEventListener("touchstart", touchHandler);
@@ -351,6 +351,7 @@ function check_playerCollision()
         
         let frame_id = (levelMap[i].type_id*3)+3*(16-levelMap[i].type_id);
         levelMap[i].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
+        levelMap[i].visible = false;
         if(playerCharacter.checkpoint_last_id[0] == true && playerCharacter.checkpoint_last_id[1] == true && playerCharacter.checkpoint_last_id[2] == true && playerCharacter.checkpoint_last_id[2] == true)
         {
           scene_manager.nextLevel = true;
