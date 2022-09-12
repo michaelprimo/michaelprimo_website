@@ -66,7 +66,7 @@ class Player
       if(playerCharacter.isBouncing === true)
       {
         playerCharacter.gravity = playerCharacter.oldGravity;
-        playerCharacter.acceleration = playerCharacter.oldAcceleration*2;
+        playerCharacter.acceleration = playerCharacter.oldAcceleration;
         playerCharacter.idleMovement = [0,1,2,1];
       }
       else
@@ -240,7 +240,7 @@ class Player
 }
 
 
-let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,5,1,2,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
+let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,5,1,1,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
 let mobileControl = new mobileControls();
 /*
 document.addEventListener("touchstart", touchHandler);
