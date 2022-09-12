@@ -4,6 +4,7 @@ let die_roll_message = ["normal","No extra rules for now...","...but if you die 
 function on_a_roll()
 {
     die_roll = Math.floor(Math.random() * 6) + 1;
+   
     //die_roll = 4;
     switch(die_roll)
     {

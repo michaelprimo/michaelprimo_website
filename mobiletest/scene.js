@@ -8,6 +8,8 @@ class Scene
         this.waitFrames = 0;
         this.nextLevel = false;
         this.stop_waitFrames = false;
+        this.death_waitFrames = false;
+        this.canClick = true;
     }
 }
 

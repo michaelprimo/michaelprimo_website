@@ -488,7 +488,12 @@ canvas.onmousedown = function(e)
       mobileControl.buttonPressed = "right";
     }
   
- scene_manager.isLevel = true;
+    if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
+    {
+      scene_manager.isLevel = true;
+      scene_manager.stop_waitFrames == false;
+    }
+    
 }
 canvas.onmouseup = function(e){
     if(mobileControl.mouseIsDown)
@@ -516,7 +521,11 @@ document.addEventListener('touchstart', (e) => {
   {
     mobileControl.buttonPressed = "left";    
   }
-   
+  if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
+  {
+    scene_manager.isLevel = true;
+    scene_manager.stop_waitFrames == false;
+  }
  
 }, false);
 

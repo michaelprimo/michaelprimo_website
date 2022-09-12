@@ -38,3 +38,17 @@ class SceneSprite
     this.maxDelayFrame = 20; 
   }
 }
+
+class Button
+{
+  constructor(x,y,buttonWidth,buttonHeight,sceneTeleport,isLevel)
+  {
+    this.x = x;
+    this.y = y;
+    this.buttonWidth = buttonWidth;
+    this.buttonHeight = buttonHeight;
+    this.sceneTeleport = sceneTeleport;
+    this.isLevel = isLevel;
+  }
+  
+}
