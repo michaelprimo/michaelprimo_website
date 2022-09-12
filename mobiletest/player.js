@@ -43,8 +43,10 @@ class Player
     this.checkpoint_grabbed = 0;
     this.movementFrameCount = 0;
     this.direction = 90;
+    this.deathCounter = 0;
     this.death = function()
     {
+      playerCharacter.deathCounter++;
       playerCharacter.speedX = 0;
       playerCharacter.speedY = 0;
       playerCharacter.direction = 360;
@@ -514,7 +516,7 @@ document.addEventListener('touchstart', (e) => {
     mobileControl.buttonPressed = "left";    
   }
    
-
+  e.preventDefault();
 }, false);
 
 document.addEventListener('touchend', (e) => {
@@ -533,5 +535,6 @@ document.addEventListener('touchend', (e) => {
     //mouseClick(e);
     
   } 
+  e.preventDefault();
   // Process the data…
 }, false);

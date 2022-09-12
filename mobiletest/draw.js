@@ -4,10 +4,12 @@ base_image.src = 'sprite.png';
 background_image = new Image();
 background_image.src = 'background.png';
 
-let skull_sprite = new SceneSprite(30, 30, 32, 32, 18, [57,58,59,58]);
-let star_sprite =  new SceneSprite(330, 30, 32, 32, 15, [48,49,50,49]);
+let skull_sprite = new SceneSprite(30, 16, 32, 32, 18, [57,58,59,58]);
+let star_sprite =  new SceneSprite(330, 16, 32, 32, 15, [48,49,50,49]);
+let star_sprite2 =  new SceneSprite(370, 16, 32, 32, 15, [48,49,50,49]);
+let star_sprite3 =  new SceneSprite(410, 16, 32, 32, 15, [48,49,50,49]);
 
-let HUDSprites = [skull_sprite, star_sprite];
+let HUDSprites = [star_sprite, star_sprite2, star_sprite3, skull_sprite];
 
 // DRAW LEVEL
 function drawLevel()
@@ -107,9 +109,12 @@ function drawLevel()
   
   
   ctx.fillStyle='#F0F0EB';
-  ctx.font = "20px Tahoma";
+  ctx.font = "30px Tahoma";
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.fillText("x " + playerCharacter.deathCounter, 100,36);
+  ctx.fillStyle='#F0F0EB';
+  ctx.font = "19px Tahoma";
   ctx.lineJoin = "round";
   ctx.beginPath();
     ctx.lineWidth = "1";
