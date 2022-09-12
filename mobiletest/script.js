@@ -44,21 +44,23 @@ function upload()
     if(scene_manager.curScene == 1)
     {
       scene_manager.waitFrames++;
-      if(scene_manager.waitFrames < 90)
+      ctx.clearRect(0,0, width, height);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = "yellow";
+      ctx.font = "25px Tahoma";
+      ctx.fillText("Awaken, fellow one.", width/2, 110);
+      ctx.fillText("You are reborn in a " + die_roll_message[0] + " world.", width/2, 170);
+      ctx.fillText(die_roll_message[1], width/2, 230);
+      ctx.fillText(die_roll_message[2], width/2, 290);
+      if(scene_manager.waitFrames < 120)
       {
-        ctx.clearRect(0,0, width, height);
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = "yellow";
-        ctx.font = "25px Tahoma";
-        ctx.fillText("Awaken, fellow one.", width/2, 110);
-        ctx.fillText("You are reborn in a " + die_roll_message + " world.", width/2, 170);
-        ctx.fillText(die_roll_description, width/2, 230);
+        scene_manager.stop_waitFrames = false;
       }
       else
       {
         scene_manager.waitFrames = 0;
-        scene_manager.isLevel = true;
+        scene_manager.stop_waitFrames = true;
       }
       
     }

@@ -102,29 +102,26 @@ function drawLevel()
     ctx.stroke();
   if(scene_manager.curLevel == 0 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Click and hold the side of the", width/2, 575);
-    ctx.fillText("screen where you want to move.", width/2, 605);
-    
-    
-     
+    ctx.fillText("Click/hold the arrows for moving.", width/2, 575);
+    ctx.fillText("Get all the stars to progress.", width/2, 605);  
   }
 
   if(scene_manager.curLevel == 1 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Touch the spikes for gliding.", width/2, 575);
-    ctx.fillText("Touch them again for bouncing.", width/2, 605);
+    ctx.fillText("If you die, you will be able to fly.", width/2, 575);
+    ctx.fillText("If you die again, you will bounce.", width/2, 605);
   }
 
   if(scene_manager.curLevel == 2 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Nice blue blocks, unfortunately...", width/2, 575);
-    ctx.fillText("...they appears only for who fly.", width/2, 605);
+    ctx.fillText("The blue blocks only appears when", width/2, 575);
+    ctx.fillText("you fly. Stars are also checkpoints.", width/2, 605);
   }
 
   if(scene_manager.curLevel == 3 && scene_manager.isLevel == true)
   {
-    ctx.fillText("Nice green blocks, unfortunately...", width/2, 575);
-    ctx.fillText("...they appears only for who bounce.", width/2, 605);
+    ctx.fillText("The green blocks only appears when", width/2, 575);
+    ctx.fillText("you bounce. Use them well.", width/2, 605);
   }
 
   if(scene_manager.curLevel == 4 && scene_manager.isLevel == true)
