@@ -4,6 +4,7 @@ class mobileControls
   {
     this.mouseIsDown = false;
     this.buttonPressed = "";
+    this.ifButtonPressed = false;
   }
 }
 
@@ -82,14 +83,13 @@ class Player
       playerCharacter.enemies_movement();
       scene_manager.curScene = 1;
       scene_manager.isLevel = false;
-      //console.clear();
-     // console.log("Death happened.");
+      
       
 
     }
     this.isGrounded = function()
     {
-      //console.log("42: function called");
+      
       // Player is on air and they aren't touching anything.
       if(playerCharacter.grounded != true)
       {
@@ -119,7 +119,7 @@ class Player
         //invert gravity.
         playerCharacter.gravity = -playerCharacter.gravity;
         playerCharacter.speedY = playerCharacter.gravity;
-        //console.log("68: speedY when inverting gravity:" + playerCharacter.speedY);
+      
          
        }
        
@@ -134,18 +134,18 @@ class Player
         if(playerCharacter.speedY >= playerCharacter.gravity)
         {
           playerCharacter.speedY = playerCharacter.gravity;
-          //console.log("82: speedY when reaching the maximum:" + playerCharacter.speedY);
+         
         }
   
         playerCharacter.speedX *= playerCharacter.friction;
         if(playerCharacter.isBouncing === true)
         {
           playerCharacter.speedY += playerCharacter.gravity;
-          //console.log("87: speedY when adding gravity on it:" + playerCharacter.speedY);
+         
         }
         playerCharacter.x += playerCharacter.speedX;
         playerCharacter.y += playerCharacter.speedY;
-        //console.log("91: speedY moving the character because of the gravity" + playerCharacter.speedY);
+      
       
       
     }
@@ -305,10 +305,7 @@ function check_playerCollision()
 
   for(let i = 0; i<levelMap.length; i++)
   {  
-    /*
-    console.log("i: " + i);
-    console.log("i+60: " + parseInt(60+i));
-    */
+    
     levelMap[i].y = camera.y + levelMap[i].oldY;
     let dir = colCheck(playerCharacter, levelMap[i]);
 
@@ -320,7 +317,6 @@ function check_playerCollision()
 
     if(playerCharacter.collision_type_id === 8 && levelMap[i].visible === true && levelMap[i].type_id === 8)
     {
-      //console.log(levelMap[i]);
       playerCharacter.death();
     }
    
@@ -427,50 +423,6 @@ document.body.addEventListener("keyup", function(e) {
   playerCharacter.keys[e.keyCode] = false;
 })
 
-
-/*
-function touchHandler(e) 
-{
-  if (e.touches) 
-  {
-    const rect = canvas.getBoundingClientRect();
-    const x = Touch.clientX - rect.left;
-    const y = Touch.clientY - rect.top;
-    mobileControl.mouseIsDown = true;
-
-    
-  ctx.fillStyle='#F0F0EB';
-  ctx.font = "20px Tahoma";
-  ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-    ctx.fillText("x: " + x, width/2, 30);
-    ctx.fillText("y: " + y, width/2, 70);
-
-
-    //alert("x: " + x + " y: " + y + " width/2: " + width/2);
-    
-      if(y > width/2)
-      {
-        mobileControl.buttonPressed = "left";
-        alert(y);
-      }
-      else
-      {
-        mobileControl.buttonPressed = "right";
-        alert(y);
-      }
-    e.preventDefault();
-  }
-
-}
-
-function end_touchHandler(e) 
-{
-    mobileControl.mouseIsDown = false;
-    mobileControl.buttonPressed = "";
-}
-
-*/
 canvas.onmousedown = function(e)
 {
   const rect = canvas.getBoundingClientRect();
@@ -482,17 +434,31 @@ canvas.onmousedown = function(e)
     if(x > width/2)
     {
       mobileControl.buttonPressed = "left";
+      scene_manager.isLevel = true;
+      scene_manager.stop_waitFrames == false;
+     
     }
     else
     {
       mobileControl.buttonPressed = "right";
+      if(document.monetization && document.monetization.state === 'started')
+      {
+        alert("You have Coil");
+      }
+      else
+      {
+        alert("You have not Coil");
+      }
+      
     }
-  
+
+  /*
     if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
     {
       scene_manager.isLevel = true;
       scene_manager.stop_waitFrames == false;
     }
+    */
     
 }
 canvas.onmouseup = function(e){
@@ -513,19 +479,26 @@ document.addEventListener('touchstart', (e) => {
   clientX = e.touches[0].clientX;
   clientY = e.touches[0].clientY;
   mobileControl.mouseIsDown = true;
-  if(clientX < width/2)
+  
+  if(clientX < width/2 && scene_manager.isLevel == true)
   {
     mobileControl.buttonPressed = "right";
+   
   }
   else
   {
-    mobileControl.buttonPressed = "left";    
+    mobileControl.buttonPressed = "left";
+     
   }
+  
+  /*
   if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
   {
     scene_manager.isLevel = true;
     scene_manager.stop_waitFrames == false;
   }
+  */
+  
  
 }, false);
 
@@ -548,3 +521,4 @@ document.addEventListener('touchend', (e) => {
   
   // Process the data…
 }, false);
+

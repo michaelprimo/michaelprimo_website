@@ -1,6 +1,8 @@
 let musicFrame = 0;
 
 
+
+
 // UPLOAD LOOP
 function upload()
 {
@@ -34,13 +36,27 @@ function upload()
   }
   else
   {
+    
     if(scene_manager.curScene == 0)
     {
       ctx.clearRect(0,0, width, height);
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "yellow";
-      ctx.fillText("Bye roll!", 30, 110);
+      if(document.monetization && document.monetization.state === 'started')
+      {
+        ctx.fillText("Coil!", 30, 110);
+      }
+      else
+      {
+        ctx.fillText("Bye roll...", 30, 110);
+      }
+      if (document.monetization) {
+        document.monetization.addEventListener('monetizationstart', () => {
+          alert("coil");
+        })
+      }
+      drawButton(0);
     }
     if(scene_manager.curScene == 1)
     {

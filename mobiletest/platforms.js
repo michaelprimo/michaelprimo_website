@@ -41,14 +41,15 @@ class SceneSprite
 
 class Button
 {
-  constructor(x,y,buttonWidth,buttonHeight,sceneTeleport,isLevel)
+  constructor(x,y,w,h,sceneTeleport,isLevel,isCoilButton,buttonText)
   {
     this.x = x;
     this.y = y;
-    this.buttonWidth = buttonWidth;
-    this.buttonHeight = buttonHeight;
+    this.w = w;
+    this.h = h;
     this.sceneTeleport = sceneTeleport;
     this.isLevel = isLevel;
+    this.isCoilButton = isCoilButton;
+    this.buttonText = buttonText;
   }
-  
 }

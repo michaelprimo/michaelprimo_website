@@ -8,8 +8,21 @@ let skull_sprite = new SceneSprite(30, 16, 32, 32, 18, [57,58,59,58]);
 let star_sprite =  new SceneSprite(330, 16, 32, 32, 15, [48,49,50,49]);
 let star_sprite2 =  new SceneSprite(370, 16, 32, 32, 15, [48,49,50,49]);
 let star_sprite3 =  new SceneSprite(410, 16, 32, 32, 15, [48,49,50,49]);
+let player_sprite =  new SceneSprite(1000, 240, 32, 32, 15, [0,1,2,3]);
 
-let HUDSprites = [star_sprite, star_sprite2, star_sprite3, skull_sprite];
+let HUDSprites = [star_sprite, star_sprite2, star_sprite3, skull_sprite, player_sprite];
+
+let button1 = new Button(120,240,240,64,0,true,false,"New Game");
+let buttonList = [button1];
+
+function drawButton(id)
+{
+  
+    ctx.strokeStyle = "green";
+    ctx.beginPath();
+    ctx.strokeRect(buttonList[id].x,buttonList[id].y,buttonList[id].buttonWidth,buttonList[id].buttonHeight);
+    ctx.stroke();
+}
 
 // DRAW LEVEL
 function drawLevel()
@@ -22,19 +35,9 @@ function drawLevel()
   ctx.globalAlpha = 0.1;
   ctx.drawImage(background_image,16,96);
   ctx.globalAlpha = 1.0;
-  /*
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(0, 0, width, height/8);
- */
+ 
   
 
-  
-  /*
-  ctx.strokeStyle = 'purple';
-  ctx.strokeRect(playerCharacter.x, playerCharacter.y, playerCharacter.hitboxWidth, playerCharacter.hitboxHeight);
-  ctx.strokeStyle = 'blue';
-  ctx.strokeRect(playerCharacter.x, playerCharacter.y, playerCharacter.drawWidth, playerCharacter.drawHeight);
-  */
   for(let i = 0; i<levelMap.length; i++)
   {
     
@@ -45,10 +48,7 @@ function drawLevel()
       ctx.drawImage(base_image, (levelMap[i].idleMovement[levelMap[i].curFrame]*SPRITE_SIZE), 0, 16, 16,(levelMap[i].x)-((TILE_SIZE-levelMap[i].hitboxWidth)/2), (levelMap[i].y)-((TILE_SIZE-levelMap[i].hitboxHeight)/2), levelMap[i].drawWidth, levelMap[i].drawHeight);      
       }
     }
-    /*
-    ctx.strokeStyle = "yellow";
-    ctx.strokeRect(levelMap[i].x, levelMap[i].y, levelMap[i].hitboxWidth, levelMap[i].hitboxHeight);
-    */
+    
     if(levelMap[i].delayFrame >= levelMap[i].maxDelayFrame)
     {
       if(levelMap[i].curFrame > levelMap[i].idleMovement.length-2)
@@ -161,6 +161,8 @@ function drawLevel()
     ctx.fillText("Show them what you got!", width/2, 605);
   }
   
+  
+
   //ctx.fillText("Next Level:" + scene_manager.nextLevel, 100, 110);
   //ctx.fillText("Checkpoint ID:" + playerCharacter.checkpoint_last_id, 0, 150);
   
