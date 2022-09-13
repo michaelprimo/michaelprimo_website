@@ -51,11 +51,6 @@ function upload()
       {
         ctx.fillText("Bye roll...", 30, 110);
       }
-      if (document.monetization) {
-        document.monetization.addEventListener('monetizationstart', () => {
-          alert("coil");
-        })
-      }
       drawButton(0);
     }
     if(scene_manager.curScene == 1)
