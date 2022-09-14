@@ -4,6 +4,15 @@ base_image.src = 'sprite.png';
 background_image = new Image();
 background_image.src = 'background.png';
 
+logo_image = new Image();
+logo_image.src = 'logo.png';
+
+logo2_image = new Image();
+logo2_image.src = 'logo2.png';
+
+logo3_image = new Image();
+logo3_image.src = 'logo3.png';
+
 let skull_sprite = new SceneSprite(30, 16, 32, 32, 18, [57,58,59,58]);
 let star_sprite =  new SceneSprite(330, 16, 32, 32, 15, [48,49,50,49]);
 let star_sprite2 =  new SceneSprite(370, 16, 32, 32, 15, [48,49,50,49]);
@@ -12,16 +21,33 @@ let player_sprite =  new SceneSprite(1000, 240, 32, 32, 15, [0,1,2,3]);
 
 let HUDSprites = [star_sprite, star_sprite2, star_sprite3, skull_sprite, player_sprite];
 
-let button1 = new Button(120,240,240,64,0,true,false,"New Game");
-let buttonList = [button1];
+let button1 = new Button(380,242,40,40,0,true,false,"New Game",true);
+let button2 = new Button(380,295,40,40,0,true,false,"New Game",true);
+let button3 = new Button(380,347,40,40,0,true,false,"New Game",true);
+let button4 = new Button(380,397,40,40,0,true,false,"New Game",true);
+let button5 = new Button(380,440,40,40,0,true,false,"New Game",true);
+let button6 = new Button(380,483,40,40,0,true,false,"New Game",true);
+let button7 = new Button(380,530,40,40,0,true,false,"New Game",false);
+let buttonList = [button1, button2, button3, button4, button5, button6, button7];
 
 function drawButton(id)
 {
-  
-    ctx.strokeStyle = "green";
-    ctx.beginPath();
-    ctx.strokeRect(buttonList[id].x,buttonList[id].y,buttonList[id].buttonWidth,buttonList[id].buttonHeight);
-    ctx.stroke();
+    if(buttonList[id].isClicked == true)
+    {
+      ctx.fillStyle = "green";
+      ctx.lineWidth = "4px";
+      ctx.beginPath();
+      ctx.fillRect(buttonList[id].x,buttonList[id].y,buttonList[id].w,buttonList[id].h);
+      ctx.stroke();
+    }
+    else
+    {
+     ctx.strokeStyle = "green";
+     ctx.lineWidth = "4px";
+     ctx.beginPath();
+     ctx.strokeRect(buttonList[id].x,buttonList[id].y,buttonList[id].w,buttonList[id].h);
+     ctx.stroke();
+    }
 }
 
 // DRAW LEVEL
@@ -113,8 +139,24 @@ function drawLevel()
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText("x " + playerCharacter.deathCounter, 100,36);
+  
   ctx.fillStyle='#F0F0EB';
   ctx.font = "19px Tahoma";
+  if(scene_manager.curLevel == 5)
+  {
+    ctx.fillText("Congratulations! You died only " + playerCharacter.deathCounter + " times.", 240,120);
+    ctx.fillText("The minimum possible was 6!", 240,160);
+    if(playerCharacter.deathCounter <= 6)
+    {
+      ctx.fillText("And you did it!!!", 240,200);
+    }
+    else
+    {
+      ctx.fillText("Try again if you want a harder challenge!", 240,200);
+    }
+    ctx.fillText("Refresh the game for starting again.", 240,240);
+  }
+  
   ctx.lineJoin = "round";
   ctx.beginPath();
     ctx.lineWidth = "1";
@@ -162,12 +204,4 @@ function drawLevel()
   }
   
   
-
-  //ctx.fillText("Next Level:" + scene_manager.nextLevel, 100, 110);
-  //ctx.fillText("Checkpoint ID:" + playerCharacter.checkpoint_last_id, 0, 150);
-  
-  /*
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(0, (height/8)*7, width, height/8);
-  */
 }

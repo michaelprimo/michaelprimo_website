@@ -1,8 +1,5 @@
 let musicFrame = 0;
 
-
-
-
 // UPLOAD LOOP
 function upload()
 {
@@ -18,10 +15,7 @@ function upload()
       
     }
     check_playerCollision();
-    if(scene_manager.curLevel == 5)
-    {
-      checkCamera();
-    }
+   
     
     drawLevel();
     if(scene_manager.stop_waitFrames == true)
@@ -43,15 +37,16 @@ function upload()
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "yellow";
-      if(document.monetization && document.monetization.state === 'started')
-      {
-        ctx.fillText("Coil!", 30, 110);
-      }
-      else
-      {
-        ctx.fillText("Bye roll...", 30, 110);
-      }
-      drawButton(0);
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(background_image,16,110);
+      ctx.globalAlpha = 1.0;
+      ctx.drawImage(logo_image, 140, 10);
+      ctx.drawImage(logo2_image, 30, 230);
+      ctx.drawImage(logo3_image, 350, 230);
+     
+      ctx.font = "19px Tahoma";
+      ctx.fillText("Made by: Michael Primo", 140,590);
+      ctx.fillText("Tested and support by: Paraserver and RPG2S", 50,620);
     }
     if(scene_manager.curScene == 1)
     {
@@ -75,6 +70,44 @@ function upload()
       }
       
     }
+    if(scene_manager.curScene == 2)
+    {
+      ctx.clearRect(0,0, width, height);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = "yellow";
+      ctx.globalAlpha = 0.5;
+      //ctx.drawImage(background_image,16,110);
+      ctx.globalAlpha = 1.0;
+      ctx.drawImage(logo_image, 140, 10);
+     
+      drawButton(0);
+      drawButton(1);
+      drawButton(2);
+      drawButton(3);
+      drawButton(4);
+      drawButton(5);
+      drawButton(6);
+      ctx.font = "30px Tahoma";
+      ctx.fillStyle = "yellow";
+      ctx.fillText("COIL MODE", 170,150);
+      ctx.font = "19px Tahoma";
+      ctx.fillText("You can trick the dice at your will!", 80,200);
+      ctx.fillText("Select the modes that will be present in the game.", 30,230);
+      ctx.font = "30px Tahoma";
+      ctx.fillText("1) Normal Mode", 30,270);
+      ctx.fillText("2) Mirror Mode", 30,320);
+      ctx.fillText("3) Scrambled Mode", 30,370);
+      ctx.fillText("4) Easy Mode", 30,420);
+      ctx.fillText("5) Deceptive Mode", 30,470);
+      ctx.fillText("6) Creative Mode", 30,520);
+      ctx.fillText("Ready to play!", 30,560);
+      ctx.font = "19px Tahoma";
+      ctx.fillText("Made by: Michael Primo", 140,600);
+      ctx.fillText("Tested and support by: Paraserver and RPG2S", 50,630);
+     
+      
+    }
     
   }
 
@@ -83,6 +116,7 @@ function upload()
 
 function levelStart()
 {
+  set_rolls();
   levelMap.length = 0;
   createMap();
  
@@ -96,8 +130,6 @@ function levelStart()
 
 window.requestAnimationFrame(upload);
 levelStart();
-
-
 
   
 

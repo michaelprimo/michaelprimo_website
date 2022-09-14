@@ -1,3 +1,6 @@
+
+
+
 class mobileControls
 {
   constructor()
@@ -105,7 +108,9 @@ class Player
       //if you are touching a platform, however...
       else
       {
-        
+
+      
+      
        //...this happens in "bouncing mode".
        if(playerCharacter.isBouncing === true)
        {
@@ -119,7 +124,7 @@ class Player
         //invert gravity.
         playerCharacter.gravity = -playerCharacter.gravity;
         playerCharacter.speedY = playerCharacter.gravity;
-      
+   
          
        }
        
@@ -193,48 +198,7 @@ class Player
           levelMap[index].idleMovement = [frame_id,frame_id+1,frame_id+2,frame_id+1];
           
         }
-        
-/*
-        if((levelMap[index].type_id == 13 && playerCharacter.checkpoint_id[playerCharacter.checkpoint_id-1] == 13))
-        {
-          
-          levelMap[index].idleMovement = [(levelMap[index].type_id,levelMap[index].type_id*3)+9,(levelMap[index].type_id,levelMap[index].type_id*3)+4,(levelMap[index].type_id,levelMap[index].type_id*3)+5,(levelMap[index].type_id,levelMap[index].type_id*3)+4];
-          levelMap[index].solid = true;
-        }
-        */
-        /*
-        if((levelMap[index].type_id == 3 && playerCharacter.isBouncing == false) || (levelMap[index].type_id == 4 && playerCharacter.isBouncing == true))
-        {
-          levelMap[index].solid = false;
-          levelMap[index].visible = true; 
-         
-        }
-        if((levelMap[index].type_id == 3 && playerCharacter.isBouncing == true) || (levelMap[index].type_id == 4 && playerCharacter.isBouncing == false))
-        {
-          levelMap[index].solid = true;
-          levelMap[index].visible = true; 
-        }
-        if((levelMap[index].type_id == 123 && die_roll == 4))
-        {
-          levelMap[index].solid = false;
-          levelMap[index].visible = false;
-        }
-        if((levelMap[index].type_id == 113 && die_roll == 3))
-        {
-          let d100_roll = Math.floor(Math.random() * 100) + 1;
-          if(d100_roll < 50)
-          {
-            levelMap[index].solid = false;
-            levelMap[index].visible = false;
-          }
-          
-        }
-        if((levelMap[index].type_id == 61 && playerCharacter.checkpoint_id != 0) || (levelMap[index].type_id == 62 && playerCharacter.checkpoint_id != 1))
-        {
-          levelMap[index].solid = false;
-          levelMap[index].visible = false;
-        }
-        */
+    
       });
     }
     
@@ -244,36 +208,11 @@ class Player
 
 let playerCharacter = new Player(250,250,24,24,TILE_SIZE,TILE_SIZE,false,0,0,3,1,1,0.8,13,[],false,0,[0,1,2,1,0],0,0,3,0,180);
 let mobileControl = new mobileControls();
-/*
-document.addEventListener("touchstart", touchHandler);
-document.addEventListener("touchend", end_touchHandler);
-*/
+
 // CREATE CHARACTER
 function moveCharacter() 
 { 
   
-  /*
-  else if(playerCharacter.isBouncing == false && die_roll == 5)
-  {
-    switch(playerCharacter.direction)
-    {
-      
-      case 90:
-        playerCharacter.x += TILE_SIZE/8;
-        break;
-      case 180:
-        playerCharacter.y += TILE_SIZE/8;
-        break;
-      case 270:
-        playerCharacter.x -= TILE_SIZE/8;
-        break;
-      case 360:
-        playerCharacter.y -= TILE_SIZE/8;
-        break;
-     
-    }
-  }
-  */
   if (playerCharacter.keys[39] || (mobileControl.buttonPressed == "left" && mobileControl.mouseIsDown == true)) 
   {
       // right arrow
@@ -429,39 +368,58 @@ canvas.onmousedown = function(e)
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
   mobileControl.mouseIsDown = true;
-  //alert("x: " + x + " y: " + y + " width/2: " + width/2);
+  
   
     if(x > width/2)
     {
       mobileControl.buttonPressed = "left";
-      scene_manager.isLevel = true;
-      scene_manager.stop_waitFrames == false;
-     
+      if(scene_manager.curScene == 0)
+      {
+        if(document.monetization && document.monetization.state === 'started')
+        {
+          scene_manager.curScene = 2;
+        }
+        else
+        {
+          alert("It seems you don't have a Coil subscription activated. If you do, you will be able to change game modes in the game! You can trick the Bye Roll when dying and choosing the rules you want!");
+        }
+      }
+      
     }
     else
     {
       mobileControl.buttonPressed = "right";
-      if(document.monetization && document.monetization.state === 'started')
+      if(scene_manager.curScene == 0 && scene_manager.isLevel == false)
       {
-        alert("You have Coil");
-      }
-      else
-      {
-        alert("You have not Coil");
+        scene_manager.isLevel = true;
+        scene_manager.stop_waitFrames = false;
       }
       
     }
-
-  /*
-    if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
+    if(scene_manager.curScene == 2 && scene_manager.isLevel == false)
     {
-      scene_manager.isLevel = true;
-      scene_manager.stop_waitFrames == false;
+      for(let i = 0; i<buttonList.length;i++)
+      {
+        mobileControl.ifButtonPressed = isPointInsideRect(x,y,buttonList[i].x,buttonList[i].y,buttonList[i].w,buttonList[i].h);
+        if(mobileControl.ifButtonPressed == true)
+        {
+          buttonList[i].isClicked = !buttonList[i].isClicked;
+          if(i!=6)
+          {
+            die_roll_available[i] = !die_roll_available[i];
+          }
+          
+        }
+        if(buttonList[6].isClicked == true)
+        {
+          scene_manager.isLevel = true;
+        }
+      }
+      
     }
-    */
-    
 }
-canvas.onmouseup = function(e){
+canvas.onmouseup = function(e)
+{
     if(mobileControl.mouseIsDown)
     {
       mobileControl.mouseIsDown = false;
@@ -474,11 +432,33 @@ canvas.onmouseup = function(e){
 let clientX;
 let clientY;
 
-document.addEventListener('touchstart', (e) => {
+document.addEventListener('touchstart', (e) => 
+{
   // Cache the client X/Y coordinates
   clientX = e.touches[0].clientX;
   clientY = e.touches[0].clientY;
   mobileControl.mouseIsDown = true;
+  if(scene_manager.curScene == 2 && scene_manager.isLevel == false)
+    {
+      for(let i = 0; i<buttonList.length;i++)
+      {
+        mobileControl.ifButtonPressed = isPointInsideRect(clientX,clientY,buttonList[i].x,buttonList[i].y,buttonList[i].w,buttonList[i].h);
+        if(mobileControl.ifButtonPressed == true)
+        {
+          buttonList[i].isClicked = !buttonList[i].isClicked;
+          if(i!=6)
+          {
+            die_roll_available[i] = !die_roll_available[i];
+          }
+          
+        }
+        if(buttonList[6].isClicked == true)
+        {
+          scene_manager.isLevel = true;
+        }
+      }
+      
+    }
   
   if(clientX < width/2 && scene_manager.isLevel == true)
   {
@@ -488,21 +468,12 @@ document.addEventListener('touchstart', (e) => {
   else
   {
     mobileControl.buttonPressed = "left";
-     
+    
   }
-  
-  /*
-  if(scene_manager.stop_waitFrames == true || scene_manager.curScene == 0)
-  {
-    scene_manager.isLevel = true;
-    scene_manager.stop_waitFrames == false;
-  }
-  */
-  
- 
 }, false);
 
-document.addEventListener('touchend', (e) => {
+document.addEventListener('touchend', (e) => 
+{
   let deltaX;
   let deltaY;
   
@@ -522,3 +493,13 @@ document.addEventListener('touchend', (e) => {
   // Process the data…
 }, false);
 
+
+function isPointInsideRect(pointX,pointY,rectX,rectY,rectWidth,rectHeight)
+{
+  rectX-=rectWidth/3;
+  rectY-=rectHeight/2;
+  console.log("mx:" + pointX + " my: " + pointY + " rX: " + rectX + "rY: " + rectY + " rW: " + rectWidth + " rH: " + rectHeight + "");
+ 
+  return  (rectX <= pointX) && (rectX + rectWidth >= pointX) &&
+               (rectY <= pointY) && (rectY + rectHeight >= pointY);
+}

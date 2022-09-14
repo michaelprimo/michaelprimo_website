@@ -1,17 +1,35 @@
 let die_roll = 1;
-let die_roll_message = ["normal","No extra rules for now...","...but if you die you will change them."];
+let die_roll_message = ["normal","No extra rules for now...","...but if you die you might change them."];
+let die_rolls = [];
+let die_roll_available = [true,true,true,true,true,true];
+let result = 0;
+
+function set_rolls()
+{
+    die_rolls.length = 0;
+    for(let i = 0; i<die_roll_available.length; i++)
+    {
+        if(die_roll_available[i] == true)
+        {
+            die_rolls.push(i+1);
+        }
+    }
+    if(die_rolls.length == 0)
+    {
+        die_rolls.push(1);
+    }
+}
 
 function on_a_roll()
 {
-    die_roll = Math.floor(Math.random() * 6) + 1;
-   
-    //die_roll = 4;
+    result = Math.floor(Math.random() * die_rolls.length);
+    die_roll = die_rolls[result];
     switch(die_roll)
     {
         case 1:
             die_roll_message[0] = "normal";
             die_roll_message[1] = "No extra rules for now...";
-            die_roll_message[2] = "...but if you die you will change them.";
+            die_roll_message[2] = "...but if you die you might change them.";
             break;
         case 2:
             die_roll_message[0] = "mirrored";
