@@ -1,6 +1,0 @@
-canvas {image-rendering: crisp-edges; image-rendering: pixelated; width:70%; height: 70%;}
-body {margin:0; text-align: center; background-color: #37313B}
-@font-face {
-    font-family: 'mainfont', cursive;
-    src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-}

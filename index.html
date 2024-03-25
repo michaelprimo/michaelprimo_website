@@ -1,174 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-08a7be1b.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAy9JREFUWEftlntIVEEYxX/raqk91LTsgWbhowKjsqiwqBaSsEViNUQqBSuKgsqwB/RCg4KsKCQTw1SyxMzeRphZgb0kM4vaLCT7I4ko6GXg6t6NcXZzbTfp5tJf+3Hh3rl35jtnzv3mzGhiUBRPv2Y0nh38r1DMHnR8Ho0ngWiWTmtRTj8IQavVOuDXnoePbYCm++p17+7c/RK0HjDYD0IjITwatJ59T0VRFObFJtJeX4JmdfxzpaBqktMRq+bCkzp1ugwLBsNqSN0GvoP/PNZgMGC8sLNvAivnQpNKAjbI8ZMg9zoEhzgnoZpA5lEIHAkvGyAkAob4Q6cJFAXMXVBTAT++QaMgbJGgkVOg+D4M8HYkoZrA+VcwfBTogmDFZli3rydpXRVs0kPBHWj/CjtS4Md3+T3jMCzLcBGBkHAoPQSx8SAktoUALdoHq/aAtw9cKYKsdPl1bBScM4LGWrC2Mf+kQGgEHMmU4AlWAJGwrRW2JkJpg0zf1QkJ4+DDOwl89a1jLfSLwLMHUGhXnCey4PYlOP24R5WtSVBbKdv5N2G6rvdv6BeB5kbYkiuVUMywJQnav0B+bQ/IgfVwNk+2D16A+UtcSCBqKrx+Ahty4GENtBrh1kU5U1tkp8PlItk6UgVz4l1IIH45FGTB/nLYvxY25sD2ZDhe0wOSNhOe18t2WRNETHYhgcWpYHwEFgs8vQe7CmHdQsi7IUHeGCE5Wv4eYdHV7x294K9qwN6KhQ/YVoE+DUaHgWEC7D0FM3SwPg6OVUszEs+iUEUsToOs4t6zFy3VBCqbJQGxN4RNBP9AuHsNZi+yLrUS6QEnsqUCIrx94Uyj3KR+D9UEhgaAxx92OXOndEBhy7bw0MLuk6BPdQT/JwWcp3H+NmgUbM9zXHr2vVUrMGIMaL3szgVWaxVOJ2Yrik3Y7qw40BnAZ1DflFUTsBWhGiX66usm4FbArYBbAbcCvxRIX9isFFY72S+BNQug6a401IoXII7lrgq9Xk9LVTaaGV7flZiUAswDrZu4HYI48dji93N9f4iYTCbKysqJNL1AE4NF6aCFT5RgwdyfvKrG+jKNABL5CV3i8EglpfkDAAAAAElFTkSuQmCC">
+    <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAV5JREFUOE/lks8rg3Ecx1/PTaIxU9uKshJaalErP9ZyctCIk6YcTLvhD5hJSDlxUdYKLbvYRRPSEpFEDi7LgTjMDvZoSmR+9DzaHjU09ty9L59vn/fn+6rv5/0VhjtFqb75jbTuRYhfZ44IQrZqSsFoyvbSjiyDb/oGIRxMSA5neWY6vAQTA8rFn6qohlE/NNqzjq1uLjfAvw+bAegdgWQCVuchfgWxSwhFQV+pQH4F7NzB3hp0ueD5EQ42oMEGDhO4PDDoVQGYGQKvH053IXmrwJwWMJlhKqgCEAmBTg8vKXh/hY5+6KkBSwuMLaoAHG7BQxLMVohdKO92t4FnAbrdeQDucUg9KbEVayF6DEfbYKyCwAkUFOYBFGk+MxeUqtFCUzukwSU6FTGmU9CU5f4PX7t/xvivACui5OhTVru+DJMuiIjK5vOptXYWwW44lzD4kJHzzX/zZVkmfmblA3gtwwnwBT+NAAAAAElFTkSuQmCC">
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiTWljaGFlbCBQcmltbyIsInNob3J0X25hbWUiOiJNUCIsImljb25zIjpbeyJzcmMiOiIvYW5kcm9pZC1jaHJvbWUtMTkyeDE5Mi5wbmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn0seyJzcmMiOiIvYW5kcm9pZC1jaHJvbWUtNTEyeDUxMi5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dLCJ0aGVtZV9jb2xvciI6IiNmZmZmZmYiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIn0=">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Michael Primo's Website! Howdy!"
+    />
+    <meta
+      property="og:url"
+      content="https://www.michaelprimo.it/"
+    />
+    <meta property="og:site_name" content="Michael Primo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Michael Primo" />
+    <meta
+      property="og:description"
+      content="Michael Primo's Website! Howdy!"
+    />
+    <meta
+      property="og:image"
+      content=""
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@MPMintis" />
+    <meta name="twitter:creator" content="@MPMintis" />
+    <meta
+      property="twitter:image"
+      content=""
+    />
+    <meta property="twitter:title" content="Michael Primo" />
+    <meta
+      property="twitter:description"
+      content=""
+    />
     <title>Michael Primo</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="manifest" href="manifest.json">
-    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
-<link href="https://fonts.googleapis.com/css2?family=Sarala&display=swap" rel="stylesheet"> 
-
-</head>
-<body>
+    <script type="module" crossorigin src="/assets/index-faaa9fb3.js"></script>
+    <link rel="stylesheet" href="/assets/index-06f7436d.css">
+  </head>
+  <body>
+    <div id="root"></div>
     
-    <div id="flex-container">
-        <div id="main_container">
-            <div id="phase_1">
-                <p id="title_text"> <span class="twist">M</span><span class="twist">i</span><span class="twist">c</span><span class="twist">h</span><span class="twist">a</span><span class="twist">e</span><span class="twist">l</span>
-                    <span class="twist">P</span><span class="twist">r</span><span class="twist">i</span><span class="twist">m</span><span class="twist">o</span></p>
-                <p class="slogan_text">I <span class="slogan_word">learn</span> for a <span class="slogan_word">living</span></p>
-                <p class="slogan_text">and</p>
-                <p class="slogan_text">I <span class="slogan_word">live</span> for a <span class="slogan_word">learning.</span></p>
-            </div>
-            <p id="game_text">
-                <a href="https://t.me/michaelprimo"><img class="contact_image" src="telegram.png"></a>
-                <a href="mailto: magiclegendstaff@gmail.com"><img class="contact_image" src="email.png"></a>
-                <a href="https://github.com/michaelprimo"><img class="contact_image" src="github.png"></a>
-                <a href="https://www.linkedin.com/in/misticalinteractive/"><img class="contact_image" src="linkedin.png"></a>
-                <a href="https://www.instagram.com/misticalinteractive/"><img class="contact_image" src="instagram.png"></a>
-            </p>
-            <p id="game_text">ABOUT...</p>
-            <div id="phase_2">
-                
-                <div class="about_me">
-                    <p class="about_title">ME</p>
-                    <p>I am Michael Primo, a 26 years old italian developer which love create weird things and solving logical problems and puzzles.
-                        I was born in the Casale Monferrato's City and now I live on Frassineto Po, a little town.
-                        I received a computer when I was 10 and then I made experiments and learned how to make games and general software.
-                        Then I got my high school's diploma on the ITIS Ascanio Sobrero's on my city and learned the basics of computer science.
-                         
-                    </p>
-                    <div class="easy_center bg_inherit">
-                        <img class="about_image" src="Michael.png">
-                    </div>
-                </div>
-                <div class="about_me">
-                    <p class="about_title">THE PROJECT</p>
-                    <p>More than a project, it's a journey. I worked for some companies of my town and after that I am starting making independent projects on my own.
-                        I am focusing about being a better frontend developer,
-                    knowing more about HTML5 (HTML, CSS and Javascript) and making varied projects while helping and entertaining people from this website. I will publish here the results of my self training and what weird but wonderful things I will do.
-                    </p>
-                    <div class="easy_center bg_inherit">
-                        <img class="about_image" src="mplogo_mini.png">
-                    </div>
-                </div>    
-            </div>
-            <p id="game_text">Open Source Games/Projects I made</p>
-            <div id="phase_3">
-                <div class="three_columns">
-                    <div class="game_container">
-                        <div class="easy_center">
-                            <img class="about_image" src="lullabyrinth.png">
-                            <p class="game_title">Lullabyrinth</p>
-                            <p class="game_description">
-                                <p class="game_description">My main project! Solve the Labyrinth while fighting boss after boss in this artistic turn-based RPG and lift your curse!</p>
-                                <a href="https://michael-primo.itch.io/lullabyrinth"><button class="button_link">Play</button></a> 
-                            </p>
-                        </div>
-                    </div>
-                    <div class="game_container">
-                        <div class="easy_center">
-                            <img class="about_image" src="itchio.png">
-                            <p class="game_title">Itch.io</p>
-                            <p class="game_description"> 
-                                <p class="game_description">This is the collection of games I made for RPG2S and Itch.io game jams!</p>
-                                <a href="https://michael-primo.itch.io/"><button class="button_link">Visit</button></a> 
-                            </p>
-                        </div>        
-                    </div>
-                    <div class="game_container">
-                        <div class="easy_center">
-                            <img class="about_image" src="byeroll.gif">
-                            <p class="game_title">Bye Roll!</p>
-                            <p class="game_description"> 
-                                <p class="game_description">Made for the JS13k contest, solve 5 puzzles by switching forms (jumping and flying) through death! And when you lose...the rules will change!</p>
-                                <a href="https://michaelprimo.it/byeroll"><button class="button_link">Play</button></a> 
-                            </p>
-                        </div>        
-                    </div>
-                </div>
-                
-            </div>
-            <div class="three_columns">
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="neon_click.PNG">
-                        <p class="game_title">Neon Click</p>
-                        <p class="game_description"> 
-                            <p class="game_description">Neon Click is a number game where you have 60 seconds for making as combinations as possible! 
-                                Look for the yellow button and use the blue buttons around to make the exact number!</p>
-                            <a href="https://michaelprimo.it/neonclick"><button class="button_link">Play</button></a> 
-                        </p>
-                    </div>        
-                </div>
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="color_discovery.PNG">
-                        <p class="game_title">Color Discovery</p>
-                        <p class="game_description">
-                            <p class="game_description">Color Discovery is a quiz/word game where you need to find the name of the colour (in italian for now) and you learn in the process!</p>
-                            <a href="https://michaelprimo.it/colordiscovery"><button class="button_link">Play</button></a> 
-                        </p>
-                    </div>
-                </div>
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="mushroom_golden.png">
-                        <p class="game_title">Golden Mushrooms!</p>
-                        <p class="game_description">
-                            <p class="game_description">Golden Mushrooms! is a game where you need to find the hidden golden mushrooms and avoid the red (poisoned) ones. The Radar and Imposter Mushrooms are included too!</p>
-                            <a href="https://michaelprimo.it/goldenmushrooms"><button class="button_link">Play</button></a> 
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="three_columns">
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="SpaceHopper2.gif">
-                        <p class="game_title">Space Hopper</p>
-                        <p class="game_description"> 
-                            <p class="game_description">Made for the JS1024 contest, avoid asteroids and hop your way into the space with a coconut-eating octopus!</p>
-                            <a href="https://michaelprimo.it/spacehopper/spacehopper.html"><button class="button_link">Play</button></a> 
-                            <a href="https://js1024.fun/demos/2021#1"><button class="button_link special_link">JS1024</button></a> 
-                        </p>
-                    </div>        
-                </div>
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="crono.png">
-                        <p class="game_title">Crono.js</p>
-                        <p class="game_description"> 
-                            <p class="game_description">If you want to make a game, animation or simply you want to manage delays on input and loops, then Crono.js is for you.</p>
-                            <a href="https://michaelprimo.github.io/cronojs/"><button class="button_link">Use</button></a> 
-                        </p>
-                    </div>        
-                </div>
-                <div class="game_container">
-                    <div class="easy_center">
-                        <img class="about_image" src="notepastr.png">
-                        <p class="game_title">Notepastr</p>
-                        <p class="game_description">
-                            <p class="game_description">Put in there notes you will paste a lot and when you need it, paste your words with a click!</p>
-                            <a href="https://michaelprimo.it/notepastr"><button class="button_link">Use</button></a> 
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-       
-            
-           
-            
-        
-        
-    </div>
-    <script src="script.js"></script>
-    <script src="sw.js"></script>
-    <script data-ad-client="ca-pub-2639854597140581" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-</body>
+    <script>
+      // (function (d, h, m) {
+      //   var js,
+      //     fjs = d.getElementsByTagName(h)[0];
+      //   if (d.getElementById(m)) {
+      //     return;
+      //   }
+      //   js = d.createElement(h);
+      //   js.id = m;
+      //   js.onload = function () {
+      //     window.makerWidgetComInit({
+      //       position: "left",
+      //       widget: "tceb4bfw36lpxauf-yfz2zr7g4hnfnkd9-5qvkqaglhcfwajee",
+      //     });
+      //   };
+      //   js.src = "https://makerwidget.com/js/embed.js";
+      //   fjs.parentNode.insertBefore(js, fjs);
+      // })(document, "script", "dhm");
+    </script>
+  </body>
 </html>

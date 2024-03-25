@@ -1,80 +1,0 @@
-<!doctype html>
-<head>
-	<title>Space Hopper ~ js1024 (1k demo)</title>
-	<meta name="author" content="Michael Primo"></meta>
-	<meta name="description" content="Hop into space and avoid asteroids!"></meta>
-	<meta name="title" content="Space Hopper 1k demo"></meta>
-	<meta charset=utf-8>
-</head>
-<body id=b>
-<canvas id=a></canvas>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-#a { position: relative; display: block;}
-.play { position: fixed; top: 50%; left: 50%; transform: translateX(-50%)translateY(-50%); font-size: 30px; font-family: arial, sans-serif; background: #f3f4f5; padding: 15px; border: 2px solid #ddd; border-radius: 5px; }
-</style>
-
-<script>
-
-// Entry configuration
-// ===================
-
-var title = "Title"; // this will be assigned automatically
-
-// Shim setup and polyfills (do not edit)
-// ======================================
-
-// canvas automatically adjusted !
-a.width = innerWidth;
-a.height = innerHeight;
-
-c = a.getContext("2d"); // no more $type conditional
-
-d = document;
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-a.requestPointerLock = a.requestPointerLock || a.mozRequestPointerLock || a.webkitRequestPointerLock;
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-if (typeof OscillatorNode !== 'undefined' && OscillatorNode.prototype) {
-  OscillatorNode.prototype.start = OscillatorNode.prototype.start || OscillatorNode.prototype.noteOn;
-  OscillatorNode.prototype.stop = OscillatorNode.prototype.stop || OscillatorNode.prototype.noteOff;
-}
-
-// Add a start button if sound is present in the code
-onload = () => {
-  var entry_code = entry.innerText;
-  var has_sound = false;
-  if(entry_code.includes('eval')){
-    try {
-      eval(entry_code.replace(/eval\(/g, 'throw(').replace(/eval\`/g, 'throw`'));
-    }
-    catch(e){
-      entry_code = e;
-    }
-  }
-  if(entry_code.includes("AudioContext")||entry_code.includes("Oscillator")||entry_code.includes("speak")||entry_code.includes("play")||entry_code.includes("autoplay")){
-    b.insertAdjacentHTML("beforeEnd", "<button class='play' onclick='console.log(entry.innerText);eval(entry.innerText);this.remove()'>PLAY</button>");
-  }
-  else {
-    eval(entry.innerText);
-  }
-};
-console.log(
-  a, // canvas
-  b, // body
-  c, // 2D canvas context
-  d  // document
-);
-
-</script>
-
-<script type=text id=entry>
-// Your entry goes here 👇
-// =======================
-for(_='",HH"GH0<L?F),``o._c.fill^^Text(ZZ"Y==X1XW*v"+on=0=[=Math.te=1=wa.widthx,y`q="++,*-vor(],^Style="#&&(Xd)Xd||[i]		=n()*(functi(){i;99>i;i++)c.ft=>RA==h/9*vh serifHlocalStorage.gfh=a.height,w=,v=h/99,x/2,y=k4,s=V/396,f=s/4,D=p=d=g=T=u=e=l=B=q=A=R=L=M=O=E,rtSI"🥥G🌕G🥤G🧁"C"👾G🐙"nrandom,rw,th,Sf;setInrval(if(Wg){f1<e=`l>e=l`,104H^Rect(0,0,w,h`S	+"r	+=S	/5*l,r	>r	`Y🌟Hr	,t	);"5c.xtAlign="cenrFE:E,ZC[EfffHYLV: l+"/e,x,5`Y🥥xL+" 🥤xM+" 🧁xO,x,10`"9ZI[AT,k`T+=s,(T>+7||T<=7)R=9*n(`93`82`70`61`ltriangleHu,dflo4*n()`0>s?s=-s+f:s+=f,(01k6`(23k4`(02T=6`(13T+4,s=-s)`T-x<=6&&T-x>=6&&yXksquareH0XA&&L2XAMs=s/5*4`3XAOl++`WAsawtoothFL--:g`Y💥Hu,T5`Wum=new AudioCxt,o=m.creaOscillat_type=q,o.cnect(m.destinati_start(_stop(.1`u)}}`9`a.addEventLisner("clickHWgY✨HWD?y6:y4,D=-D,sineHu)}))';G=/[-W-Z^-`F-H]/.exec(_);)with(_.split(G))_=join(shift());eval(_)
-//THE END. THANKS FOR WATCHING! WE WILL SEE YOU IN THE NEXT EPISODE!
-//Github: https://github.com/michaelprimo
-// =======================
-</script>
-</body>
-
